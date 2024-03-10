@@ -3,6 +3,11 @@ from typing import Union
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from .db import main, schema
+
+# Will create the database tables if they do not exist
+schema.Base.metadata.create_all(bind=main.engine)
+
 app = FastAPI()
 
 origins = [

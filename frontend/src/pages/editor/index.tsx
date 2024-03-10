@@ -156,7 +156,7 @@ function CodeEditor() {
         }
       />
 
-      <Main.Content>
+      <Main.Content className="bg-secondary-5">
         <ResizablePanelGroup
           direction="vertical"
           className="min-h-[calc(100vh-54px)]"

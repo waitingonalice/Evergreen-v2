@@ -1,6 +1,6 @@
-export { default as Topbar } from "./layout/Topbar";
+export { default as Topbar } from "./layout/editor/Topbar";
 export * from "./modal";
-export * from "./layout";
+export * from "./layout/editor";
 export * from "./spinner";
 export * from "./tooltip";
 export * from "./switch";

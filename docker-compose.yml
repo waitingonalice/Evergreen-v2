@@ -1,40 +1,27 @@
 services:
-  frontend:
-    build:
-      context: ./frontend
-      target: dev
-    container_name: frontend
-    command: yarn run dev
-    environment:
-      - NODE_ENV=development
-    ports:
-      - "3000:3000"
-    volumes:
-      - ./frontend:/app
-      - /app/node_modules
-      - /app/.next
-
   backend:
     build: ./backend
     container_name: backend
     command: pipenv run dev
+    restart: always
     ports:
       - "8000:8000"
+    env_file:
+      - ./backend/.env
     volumes:
-      - ./backend:/src
+      - ./backend:/app
 
   db:
     image: postgres:latest
+    container_name: postgres
     restart: always
-    container_name: postgres-db
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
+      POSTGRES_PASSWORD: 9713
       POSTGRES_DB: postgres
     ports:
-      - "5432:5432"
+      - 5432:5432
     volumes:
       - db_data:/var/lib/postgresql/data
-
 volumes:
   db_data:
