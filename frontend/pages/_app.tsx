@@ -1,7 +1,6 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
-import { App as Providers } from "@/components/app-context";
 import "@/styles/globals.css";
 
 // Create a client
@@ -23,11 +22,9 @@ export default function App({ Component, pageProps }: AppContext & AppProps) {
         <link rel="icon" href="/code-bracket.svg" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Providers>
-          <main>
-            <Component {...pageProps} />
-          </main>
-        </Providers>
+        <main>
+          <Component {...pageProps} />
+        </main>
       </QueryClientProvider>
     </>
   );

@@ -1,0 +1,35 @@
+@keyframes slideInCenter {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, 0%);
+  }
+}
+
+@keyframes slideOutCenter {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, 0%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%);
+  }
+}
+
+.linear {
+  animation-timing-function: linear;
+}
+
+.slideInCenter {
+  animation: slideInCenter 150ms;
+}
+
+.slideOutCenter {
+  animation: slideOutCenter 150ms;
+}

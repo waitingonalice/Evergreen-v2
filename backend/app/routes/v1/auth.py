@@ -1,18 +1,35 @@
-class AuthService:
-    def __init__(self) -> None:
-        pass
+from fastapi import APIRouter
 
-    def login(self) -> None:
-        pass
+from ...constants.routes import routerV1
 
-    def register(self) -> None:
-        pass
+router = APIRouter(f"{routerV1}")
 
-    def forgot_password(self) -> None:
-        pass
 
-    def reset_password(self) -> None:
-        pass
+@router.post("/register")
+def register():
+    pass
 
-    def verify_email(self) -> None:
-        pass
+
+@router.post("/login")
+def login():
+    pass
+
+
+@router.post("/refresh-token")
+def refresh_token():
+    pass
+
+
+@router.post("/forgot-password")
+def forgot_password():
+    pass
+
+
+@router.post("/reset-password")
+def reset_password(token: str):
+    pass
+
+
+@router.post("/verify-email")
+def verify_email(token: str):
+    pass
