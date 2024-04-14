@@ -1,5 +1,5 @@
-// const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
-// const endpointV1 = `${endpoint}/api/v1`;
+const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
+const endpointV1 = `${endpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
   auth: {
@@ -20,5 +20,9 @@ export const clientRoutes = {
 };
 
 export const apiRoutes = {
-  auth: {},
+  v1: {
+    auth: {
+      register: `${endpointV1}/auth/register`,
+    },
+  },
 };

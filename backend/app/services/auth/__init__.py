@@ -1,7 +1,11 @@
+from fastapi import BackgroundTasks
+
 from ...constants.error import ErrorCode
 from ...db.utils import transaction
 from ...models.account import AccountModel
 from ...utils import auth, environment, errorHandler
+from ..email import EmailService
+from .utils import build_email_content
 from .validation import RegisterBody
 
 
@@ -11,7 +15,9 @@ class AuthService:
         pass
 
     @errorHandler.valueErrorHandler
-    def register(self, fields: RegisterBody) -> None:
+    def register(
+        self, fields: RegisterBody, background_tasks: BackgroundTasks
+    ):
         answer = environment.Env.SECRET_ANSWER
         if fields.secret != answer:
             raise ValueError(ErrorCode.INCORRECT_ANSWER)
@@ -22,8 +28,15 @@ class AuthService:
         account = AccountModel(**fields.model_dump())
         id = transaction(lambda conn: account.create_account(conn))
 
-        # TODO: Send email verification
-        return account.get_account(id=id)
+        registered_acc: dict = account.get_account(id=id)
+        email_content, email_service_deps = build_email_content(
+            registered_acc["email"], fields
+        )
+        email_service = EmailService(**email_service_deps)
+        background_tasks.add_task(
+            email_service.send_email_template, email_content
+        )
+        return registered_acc
 
     def forgot_password(self) -> None:
         pass

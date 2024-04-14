@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, BackgroundTasks
 
 from ...constants.routes import routerV1
 from ...services.auth import AuthService, validation
@@ -7,8 +7,10 @@ router = APIRouter(prefix=f"{routerV1}/auth")
 
 
 @router.post("/register")
-def register(fields: validation.RegisterBody):
-    return AuthService().register(fields)
+def register(
+    fields: validation.RegisterBody, background_tasks: BackgroundTasks
+):
+    return AuthService().register(fields, background_tasks)
 
 
 @router.post("/login")

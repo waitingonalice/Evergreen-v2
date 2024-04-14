@@ -11,6 +11,8 @@ sqlalchemy = "*"
 psycopg2 = "*"
 email-validator = "*"
 cryptography = "*"
+jinja2 = "*"
+pyjwt = "*"
 
 [dev-packages]
 black = "*"
