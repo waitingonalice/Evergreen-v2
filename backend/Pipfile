@@ -9,6 +9,8 @@ uvicorn = { extras = ["standard"] }
 alembic = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
+email-validator = "*"
+cryptography = "*"
 
 [dev-packages]
 black = "*"

@@ -5,37 +5,26 @@ services:
       target: prod
     container_name: frontend
     restart: always
-    environment:
-      - NODE_ENV=production
-      # TODO: update this for production
-      - NEXT_PUBLIC_ENDPOINT_URL = http://localhost:8000
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
 
   backend:
     build: ./backend
     container_name: backend
-    command: pipenv run dev
     restart: always
-    env_file:
-      - ./backend/.env
     ports:
       - "8000:8000"
-    volumes:
-      - ./backend:/app
+    depends_on:
+      - db
 
   db:
-    image: postgres:latest
-    container_name: postgres
+    image: postgres:15
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 9713
-      POSTGRES_DB: postgres
+    env_file:
+      - ./backend/.env.db
     ports:
-      - "5432:5432"
+      - "6543:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
-
-volumes:
-  db_data:
+      - ./backend/data:/var/lib/postgresql/data

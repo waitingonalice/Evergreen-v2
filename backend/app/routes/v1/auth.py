@@ -1,13 +1,14 @@
 from fastapi import APIRouter
 
 from ...constants.routes import routerV1
+from ...services.auth import AuthService, validation
 
-router = APIRouter(f"{routerV1}")
+router = APIRouter(prefix=f"{routerV1}/auth")
 
 
 @router.post("/register")
-def register():
-    pass
+def register(fields: validation.RegisterBody):
+    return AuthService().register(fields)
 
 
 @router.post("/login")

@@ -1,3 +1,7 @@
-const Root = () => <>index page</>;
+import React from "react";
 
-export default Root;
+function index() {
+  return <div>index</div>;
+}
+
+export default index;
