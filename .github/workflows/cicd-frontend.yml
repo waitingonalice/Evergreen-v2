@@ -2,7 +2,7 @@ name: CI/CD Frontend
 
 on:
   pull_request:
-    branches: [dev, main]
+    branches: [main]
 
 defaults:
   run:
