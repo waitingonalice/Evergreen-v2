@@ -5,6 +5,7 @@ from email.mime.text import MIMEText
 
 from jinja2 import Template
 
+from ...constants.error import ErrorCode
 from ...utils.environment import Env
 from ...utils.formatting import find_file
 
@@ -33,6 +34,13 @@ class EmailService:
         self.email_client = email_client
 
     def send_email_template(self, content: dict) -> None:
+        if (
+            not self.template
+            or not self.sender_address
+            or not self.sender_password
+        ):
+            raise ValueError(ErrorCode.MISSING_EMAIL_CLIENT_CREDS)
+
         html_template_path = find_file(self.template)
         with open(f"{html_template_path}/index.html") as file:
             html = file.read()
