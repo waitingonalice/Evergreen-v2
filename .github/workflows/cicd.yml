@@ -1,0 +1,37 @@
+name: CI/CD
+
+on:
+  pull_request:
+    branches: [dev, main]
+
+defaults:
+  run:
+    working-directory: ./
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Python 3.x
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install pipenv
+        run: |
+          python3 -m pip install --upgrade pipenv
+
+      - name: Install dependencies
+        run: |
+          pipenv install --dev
+
+      - name: Run pre-commit hooks
+        uses: pre-commit/action@v3.0.1
+
+      - name: Run linters
+        run: |
+          pipenv run flake8 --ignore=E501,W503
+          pipenv run typecheck
