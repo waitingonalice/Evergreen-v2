@@ -30,7 +30,6 @@ class EmailService:
         email_client["From"] = self.sender_address
         email_client["To"] = self.receiver_address
         email_client["Subject"] = self.subject
-
         self.email_client = email_client
 
     def send_email_template(self, content: dict) -> None:
