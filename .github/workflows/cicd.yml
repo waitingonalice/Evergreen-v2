@@ -47,7 +47,7 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: To backend
+      - name: To frontend
         run: cd frontend
 
       - name: Install dependencies
