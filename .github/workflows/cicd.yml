@@ -20,19 +20,15 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: To backend
-        run: cd backend
-
-      - name: Install pipenv
-        run: |
-          python3 -m pip install --upgrade pipenv
-
       - name: Install dependencies
         run: |
-          pipenv install --dev
+          cd backend
+          python3 -m pip install --upgrade pipenv
+          cd backend && pipenv install --dev
 
       - name: Run linters
         run: |
+          cd backend
           pipenv run flake8 --ignore=E501,W503 .
           pipenv run typecheck
 
@@ -47,13 +43,8 @@ jobs:
         with:
           node-version: "20.x"
 
-      - name: To frontend
-        run: cd frontend
-
-      - name: Install dependencies
+      - name: Install dependencies and run linters
         run: |
+          cd frontend
           yarn install --frozen-lockfile
-
-      - name: Run linters
-        run: |
           yarn lint
