@@ -24,7 +24,7 @@ jobs:
         run: |
           cd backend
           python3 -m pip install --upgrade pipenv
-          cd backend && pipenv install --dev
+          pipenv install --dev
 
       - name: Run linters
         run: |
