@@ -1,51 +1,15 @@
-import { useLayoutEffect, useState } from "react";
-import clsx from "clsx";
+import React from "react";
+import { useDelayUnmount } from "@/hooks";
 
-interface AnimateProps {
-  duration?: number;
-  enter?: string;
-  enterFrom?: string;
-  leaveTo?: string;
-  children: React.ReactNode;
+export interface AnimateProps {
   show: boolean;
-  className?: string;
+  timer?: number;
+  children: React.ReactNode;
 }
 
-export const Animate = ({
-  duration,
-  enter,
-  enterFrom,
-  leaveTo,
-  children,
-  show,
-  className,
-}: AnimateProps) => {
-  const [showComponent, setShowComponent] = useState(false);
-  const [animate, setAnimate] = useState<string>();
+function Animate({ children, show, timer = 100 }: AnimateProps) {
+  const render = useDelayUnmount(show, timer);
+  return <>{render && children}</>;
+}
 
-  useLayoutEffect(() => {
-    const timer = setTimeout(() => {
-      if (show) {
-        setShowComponent(true);
-        setAnimate(enterFrom);
-      } else {
-        setShowComponent(false);
-        setAnimate(leaveTo);
-      }
-    }, duration || 100);
-    return () => clearTimeout(timer);
-  }, [show]);
-
-  return (
-    <div
-      className={clsx(
-        className,
-        enter,
-        animate,
-        !showComponent ? "opacity-0" : "opacity-100",
-      )}
-    >
-      {showComponent && children}
-    </div>
-  );
-};
+export { Animate };

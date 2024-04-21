@@ -17,7 +17,7 @@ export function ErrorPage() {
           </Text>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button>
-              <a href={clientRoutes.dashboard}>Go back home</a>
+              <a href={clientRoutes.root}>Go back home</a>
             </Button>
           </div>
         </div>

@@ -1,12 +1,7 @@
-from typing import Union
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .db import main, schema
-
-# Will create the database tables if they do not exist
-schema.Base.metadata.create_all(bind=main.engine)
+from .routes import v1
 
 app = FastAPI()
 
@@ -23,11 +18,4 @@ app.add_middleware(
 )
 
 
-@app.get("/")
-def read_root():
-    return {"Hello": "World"}
-
-
-@app.get("/items/{item_id}")
-def read_item(item_id: int, q: Union[str, None] = None):
-    return {"item_id": item_id, "q": q}
+v1.endpoint(app)

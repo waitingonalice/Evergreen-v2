@@ -1,12 +1,18 @@
-import os
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+from ..utils.environment import Env, getEnv
+
+
+def get_database_url():
+    if getEnv("IN_DOCKER"):
+        return Env.DATABASE_DOCKER_URL
+    return Env.DATABASE_URL
+
+
 engine = create_engine(
-    DATABASE_URL or "",
+    get_database_url() or "",
     pool_size=20,
     max_overflow=0,
 )

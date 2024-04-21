@@ -18,7 +18,7 @@ RUN yarn run build
 # Production build strips out dev dependencies and only copies the necessary files
 FROM base as prod
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

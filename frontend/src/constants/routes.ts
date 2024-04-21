@@ -2,37 +2,27 @@ const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
 const endpointV1 = `${endpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
+  admin: {},
+
   auth: {
     login: "/login",
     logout: "/logout",
     register: "/register",
-    verify: "/verify",
+    verifyEmail: "/verify-email",
     forgotPassword: "/forgot-password",
-    resetPassword: "/set-password",
+    resetPassword: "/reset-password",
   },
   profile: { index: "/profile" },
-  dashboard: "/dashboard",
-  codeEditor: {
-    index: "/code-editor",
-  },
 };
 
 export const apiRoutes = {
-  auth: {
-    register: `${endpoint}/auth/register`,
-    verify: (token: string) => `${endpoint}/auth/verify/${token}`,
-    login: `${endpoint}/auth/login`,
-    refreshToken: `${endpoint}/auth/refresh-token`,
-    forgotPassword: `${endpoint}/auth/forgot-password`,
-    resetPassword: (token: string) => `${endpoint}/auth/set-password/${token}`,
-  },
-  user: {
-    get: `${endpointV1}/user`,
-  },
-  collections: {
-    addCollection: `${endpointV1}/collections`,
-  },
-  execute: {
-    code: `${endpointV1}/execute`,
+  v1: {
+    auth: {
+      register: `${endpointV1}/auth/register`,
+      verifyEmail: `${endpointV1}/auth/verify-email`,
+      forgotPassword: `${endpointV1}/auth/forgot-password`,
+      resetPassword: `${endpointV1}/auth/reset-password`,
+      resendEmail: `${endpointV1}/auth/confirmation-email`,
+    },
   },
 };

@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
-import { App as Providers } from "@/components/app-context";
+import { ToastProvider, cn } from "@waitingonalice/design-system/";
 import "@/styles/globals.css";
+import { isBrowser } from "@/utils";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -15,19 +16,33 @@ const queryClient = new QueryClient({
 });
 
 export default function App({ Component, pageProps }: AppContext & AppProps) {
+  const isMobilePhone = isBrowser() && window.screen.width < 768;
+  const isTablet = isBrowser() && window.screen.width < 1280;
+  const renderViewport = () => {
+    if (isMobilePhone) {
+      return "initial-scale=0.6";
+    }
+    if (isTablet) {
+      return "initial-scale=0.7";
+    }
+    return "initial-scale=1.0";
+  };
   return (
     <>
       <Head>
-        <meta name="viewport" content="width=1280, initial-scale=1.0" />
+        <meta
+          name="viewport"
+          content={cn("width=device-width maximum-scale=1.0", renderViewport())}
+        />
         <title>Evergreen</title>
         <link rel="icon" href="/code-bracket.svg" />
       </Head>
       <QueryClientProvider client={queryClient}>
-        <Providers>
-          <main>
+        <main>
+          <ToastProvider>
             <Component {...pageProps} />
-          </main>
-        </Providers>
+          </ToastProvider>
+        </main>
       </QueryClientProvider>
     </>
   );

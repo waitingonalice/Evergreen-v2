@@ -1,13 +1,7 @@
-import { GetServerSideProps } from "next";
-import { clientRoutes } from "@/constants";
+import React from "react";
 
-export const getServerSideProps: GetServerSideProps = async () => ({
-  props: {},
-  redirect: {
-    destination: clientRoutes.codeEditor.index,
-  },
-});
+function index() {
+  return <div>index</div>;
+}
 
-const Root = () => <></>;
-
-export default Root;
+export default index;

@@ -1,27 +1,45 @@
+version: "3.8"
+name: evergreen
+
 services:
+  frontend:
+    container_name: frontend
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+
   backend:
-    build: ./backend
     container_name: backend
-    command: pipenv run dev
     restart: always
     ports:
       - "8000:8000"
-    env_file:
-      - ./backend/.env
-    volumes:
-      - ./backend:/app
+    depends_on:
+      - database
 
-  db:
-    image: postgres:latest
-    container_name: postgres
+  database:
+    image: postgres:15
     restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 9713
-      POSTGRES_DB: postgres
+    env_file:
+      - ./data/.env.db
     ports:
-      - 5432:5432
+      - "6543:5432"
     volumes:
-      - db_data:/var/lib/postgresql/data
+      - ./data/prod:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@pgadmin.com
+      PGADMIN_DEFAULT_PASSWORD: password
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 6544:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - database
+
 volumes:
-  db_data:
+  pgadmin:

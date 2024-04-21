@@ -1,16 +1,21 @@
-FROM python:3.11-alpine as base
-
+FROM python:3.11-slim as base
 WORKDIR /app
 
-RUN \
-  apk add --no-cache postgresql-libs && \
-  apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev
+RUN apt-get update \
+  && apt-get -y install libpq-dev gcc
 
+RUN pip install pipenv
+
+ENV IN_DOCKER Yes
+
+
+FROM base as dev
 COPY ./Pipfile ./Pipfile.lock /app/
-RUN pip install pipenv && pipenv install --deploy --ignore-pipfile
-
-RUN apk --purge del .build-deps
-
+RUN  pipenv install
 COPY . /app
 
-CMD ["pipenv", "run", "dev"]
+FROM base as prod
+COPY --from=dev /app /app
+RUN  pipenv install --deploy --system
+EXPOSE 8000
+CMD ["pipenv", "run", "start"]
