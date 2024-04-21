@@ -1,7 +1,7 @@
 import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
-import { cn } from "@waitingonalice/design-system/utils/cn";
+import { ToastProvider, cn } from "@waitingonalice/design-system/";
 import "@/styles/globals.css";
 import { isBrowser } from "@/utils";
 
@@ -39,7 +39,9 @@ export default function App({ Component, pageProps }: AppContext & AppProps) {
       </Head>
       <QueryClientProvider client={queryClient}>
         <main>
-          <Component {...pageProps} />
+          <ToastProvider>
+            <Component {...pageProps} />
+          </ToastProvider>
         </main>
       </QueryClientProvider>
     </>

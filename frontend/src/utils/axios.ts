@@ -46,6 +46,7 @@ class AxiosFactory {
       (response) => response,
       axiosHelper.responseMiddleware,
     );
+
     this.axios = axiosClient;
   }
 

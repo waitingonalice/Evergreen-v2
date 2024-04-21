@@ -20,6 +20,11 @@ class EmailService:
         subject: str | None = None,
         template: str | None = None,
     ):
+        """Send an email with a template.
+        template: The directory path of the email template.
+        receiver_address: The email address of the receiver.
+        subject: The subject of the email.
+        """
         self.sender_address = Env.EMAIL_ADDRESS
         self.sender_password = Env.EMAIL_PASSWORD
         self.template = template

@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useState } from "react";
+import { useRouter } from "next/router";
 import { Button, Form, FormInput, Link } from "@waitingonalice/design-system";
 import { AuthLayout } from "@/components";
 import { clientRoutes } from "@/constants";
 
 function Login() {
+  const router = useRouter();
   const [formInput, setFormInput] = useState({
     username: "",
     password: "",
@@ -17,7 +20,7 @@ function Login() {
   };
 
   return (
-    <AuthLayout title="Admin Login">
+    <AuthLayout title="Login">
       <Form className="flex flex-col gap-y-4">
         <FormInput
           id="username"
@@ -34,11 +37,14 @@ function Login() {
           isPassword
           autoComplete="current-password"
         />
-        <Button type="submit">Sign in</Button>
-        <Link variant="secondary" to={clientRoutes.auth.admin.register}>
+
+        <Button className="mt-4" type="submit">
+          Sign in
+        </Button>
+        <Link variant="secondary" to={clientRoutes.auth.register}>
           Register
         </Link>
-        <Link to={clientRoutes.auth.admin.forgotPassword}>Forgot Password</Link>
+        <Link to={clientRoutes.auth.forgotPassword}>Forgot Password</Link>
       </Form>
     </AuthLayout>
   );

@@ -1,4 +1,4 @@
-name: CI/CD Backend
+name: CI/CD
 
 on:
   pull_request:
@@ -6,10 +6,10 @@ on:
 
 defaults:
   run:
-    working-directory: ./backend
+    working-directory: ./
 
 jobs:
-  build:
+  code-quality-backend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,6 +19,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+
+      - name: To backend
+        run: cd backend
 
       - name: Install pipenv
         run: |
@@ -32,3 +35,25 @@ jobs:
         run: |
           pipenv run flake8 --ignore=E501,W503 .
           pipenv run typecheck
+
+  code-quality-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: To backend
+        run: cd frontend
+
+      - name: Install dependencies
+        run: |
+          yarn install --frozen-lockfile
+
+      - name: Run linters
+        run: |
+          yarn lint

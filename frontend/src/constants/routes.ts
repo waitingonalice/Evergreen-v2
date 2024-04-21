@@ -2,19 +2,15 @@ const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
 const endpointV1 = `${endpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
+  admin: {},
+
   auth: {
-    admin: {
-      login: "/admin/login",
-      forgotPassword: "/admin/verify",
-      resetPassword: "/admin/reset-password",
-      register: "/admin/register",
-    },
     login: "/login",
     logout: "/logout",
     register: "/register",
-    verify: "/verify",
+    verifyEmail: "/verify-email",
     forgotPassword: "/forgot-password",
-    resetPassword: "/set-password",
+    resetPassword: "/reset-password",
   },
   profile: { index: "/profile" },
 };
@@ -23,6 +19,10 @@ export const apiRoutes = {
   v1: {
     auth: {
       register: `${endpointV1}/auth/register`,
+      verifyEmail: `${endpointV1}/auth/verify-email`,
+      forgotPassword: `${endpointV1}/auth/forgot-password`,
+      resetPassword: `${endpointV1}/auth/reset-password`,
+      resendEmail: `${endpointV1}/auth/confirmation-email`,
     },
   },
 };
