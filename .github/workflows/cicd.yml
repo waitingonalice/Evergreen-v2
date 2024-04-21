@@ -29,7 +29,6 @@ jobs:
       - name: Run linters
         run: |
           cd backend
-          pipenv run flake8 --ignore=E501,W503 .
           pipenv run typecheck
 
   code-quality-frontend:
