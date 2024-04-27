@@ -2,21 +2,11 @@ from typing import Optional
 
 from fastapi import Header, HTTPException, Request
 
-from ..constants.enums import Role
 from ..constants.error import ErrorCode
 from ..utils.auth import decode_token
 
 
-class Token:
-    email: str
-    active: bool
-    role: Role
-    country: str
-
-
-def verify_token(
-    request: Request, token: Optional[str] = Header(None)
-) -> Token:
+def verify_token(request: Request, token: Optional[str] = Header(None)):
     header_token = request.headers.get("Authorization")
 
     if header_token is None and token is None:
