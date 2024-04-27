@@ -1,20 +1,48 @@
+import datetime
+
 import jwt
-from cryptography.fernet import Fernet
+from bcrypt import checkpw, gensalt, hashpw
 
 from ..utils.environment import Env
 
-
-def encrypt(message: str) -> str:
-    return Fernet(Env.SECRET_TOKEN.encode()).encrypt(message.encode()).decode()
+key = Env.SECRET_TOKEN
 
 
-def decrypt(message: str) -> str:
-    return Fernet(Env.SECRET_TOKEN.encode()).decrypt(message.encode()).decode()
+def hash_password(password: str) -> str:
+    salt = gensalt()
+    password_hash = hashpw(password.encode(), salt)
+    return password_hash.decode()
+
+
+def verify_password(password: str, hashed_password: str) -> bool:
+    return checkpw(password.encode(), hashed_password.encode())
 
 
 def encode_token(payload: dict) -> str:
-    return jwt.encode(payload, Env.SECRET_TOKEN, algorithm="HS256")
+    return jwt.encode(payload, key, algorithm="HS256")
 
 
 def decode_token(token: str) -> dict:
-    return jwt.decode(token, Env.SECRET_TOKEN, algorithms=["HS256"])
+    return jwt.decode(token, key, algorithms=["HS256"])
+
+
+def generate_auth_token(email: str, active: bool, role: str, country: str):
+    expiry = datetime.datetime.now(
+        tz=datetime.timezone.utc
+    ) + datetime.timedelta(hours=1)
+    return encode_token(
+        {
+            "email": email,
+            "active": active,
+            "country": country,
+            "role": role,
+            "exp": expiry,
+        }
+    )
+
+
+def generate_refresh_token(email: str, remember_me: bool):
+    expiry = datetime.datetime.now(
+        tz=datetime.timezone.utc
+    ) + datetime.timedelta(days=30 if remember_me else 1)
+    return encode_token({"email": email, "exp": expiry})

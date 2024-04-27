@@ -119,3 +119,5 @@ export const generateOptions = <T extends Record<string, string>>(arg: T) => {
 
 export const getDomain = (hostname: string) =>
   hostname.split(".").reverse().slice(0, 2).reverse().join(".");
+
+export const nowInUnixSeconds = () => Math.round(Date.now()) / 1000;

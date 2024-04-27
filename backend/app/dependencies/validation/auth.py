@@ -24,10 +24,10 @@ class ValidateToken(BaseModel):
         except Exception as e:
             if "expired" in str(e):
                 raise HTTPException(
-                    status_code=400, detail=ErrorCode.EXPIRED_TOKEN
+                    status_code=401, detail=ErrorCode.EXPIRED_TOKEN
                 )
             raise HTTPException(
-                status_code=400, detail=ErrorCode.INVALID_TOKEN
+                status_code=401, detail=ErrorCode.INVALID_TOKEN
             )
 
 
@@ -41,6 +41,7 @@ class RegisterBody(BaseModel):
         min_length=8,
         max_length=14,
     )
+    confirmPassword: str
     role: Role
     country: str
     secret: str
@@ -64,3 +65,10 @@ class ResetPasswordBody(ValidateToken):
         min_length=8,
         max_length=14,
     )
+    confirmPassword: str
+
+
+class LoginBody(BaseModel):
+    username: str
+    password: str
+    rememberMe: bool

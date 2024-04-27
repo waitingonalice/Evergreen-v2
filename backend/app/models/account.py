@@ -58,9 +58,27 @@ class AccountModel:
         query_statement = """
         SELECT id, email, username, role, country, is_active
         FROM "Account"
-        WHERE id = :id OR email = :email OR username = :username
+        WHERE id = :id OR
+        email = :email OR
+        username = :username OR
+        password = :password
         """
-        params = {"id": id, "email": self.email, "username": self.username}
+        params = {
+            "id": id,
+            "email": self.email,
+            "username": self.username,
+            "password": self.password,
+        }
+        result = query(query_statement, params).mappings().first()
+        return result
+
+    def get_password(self):
+        query_statement = """
+        SELECT password
+        FROM "Account"
+        WHERE username = :username
+        """
+        params = {"username": self.username}
         result = query(query_statement, params).mappings().first()
         return result
 

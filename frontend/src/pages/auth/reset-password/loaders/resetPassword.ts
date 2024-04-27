@@ -4,6 +4,7 @@ import { AxiosFactory } from "@/utils";
 
 interface ResetPasswordInput {
   password: string;
+  confirmPassword: string;
   token: string;
 }
 

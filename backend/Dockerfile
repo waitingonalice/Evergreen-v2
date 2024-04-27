@@ -1,13 +1,12 @@
-FROM python:3.11-slim as base
+FROM python:3.11 as base
 WORKDIR /app
 
 RUN apt-get update \
-  && apt-get -y install libpq-dev gcc
+  && apt-get -y install build-essential libpq-dev gcc cargo
 
 RUN pip install pipenv
 
 ENV IN_DOCKER Yes
-
 
 FROM base as dev
 COPY ./Pipfile ./Pipfile.lock /app/
