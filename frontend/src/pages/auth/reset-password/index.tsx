@@ -20,7 +20,7 @@ import { useResetPassword } from "./loaders/resetPassword";
 
 export function ResetPassword() {
   const router = useRouter();
-  const [form, setForm] = useState({ password: "" });
+  const [form, setForm] = useState({ password: "", confirmPassword: "" });
   const { validate, onSubmit, errors } = useForm({
     data: form,
     zod: z.object({
@@ -28,14 +28,20 @@ export function ResetPassword() {
         .string()
         .min(8, { message: "Password should contain 8-14 characters." })
         .max(14, { message: "Password should contain 8-14 characters." }),
+      confirmPassword: z.string().refine((data) => data === form.password, {
+        message: "Passwords do not match.",
+      }),
     }),
   });
   const { renderToast } = useToast();
   const [resetPassword, resetPasswordOptions] = useResetPassword();
 
-  const handleOnChange = (value: string) => {
-    validate("password", value);
-    setForm({ password: value });
+  const handleOnChange = (key: string, value: string) => {
+    validate(key, value);
+    setForm((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
   };
 
   const handleOnSubmit = () => {
@@ -43,6 +49,7 @@ export function ResetPassword() {
     if (!success) return;
     resetPassword({
       password: form.password,
+      confirmPassword: form.confirmPassword,
       token: router.query.token as string,
     }).catch((err) => {
       if (err instanceof AxiosError) {
@@ -74,12 +81,22 @@ export function ResetPassword() {
           <Text type="subhead-2-bold">Please enter your new password</Text>
           <FormInput
             id="password"
+            isPassword
             value={form.password}
             label="Password"
             required
-            onChange={handleOnChange}
+            onChange={(value) => handleOnChange("password", value)}
             errorMessage={errors.password}
             showError={!!errors.password}
+          />
+          <FormInput
+            isPassword
+            value={form.confirmPassword}
+            label="Confirm Password"
+            required
+            onChange={(value) => handleOnChange("confirmPassword", value)}
+            errorMessage={errors.confirmPassword}
+            showError={!!errors.confirmPassword}
           />
           <Button className="mt-4" type="submit">
             {resetPasswordOptions.isLoading ? <Spinner /> : "Submit"}

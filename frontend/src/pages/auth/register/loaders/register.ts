@@ -6,6 +6,7 @@ import { AxiosFactory } from "@/utils";
 export interface RegisterNewUserType {
   email: string;
   password: string;
+  confirmPassword: string;
   username: string;
   country: CountryEnum | string;
   secret: string;

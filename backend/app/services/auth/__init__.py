@@ -2,6 +2,11 @@ from fastapi import BackgroundTasks, HTTPException
 
 from ...constants.error import ErrorCode
 from ...db.utils import transaction
+from ...dependencies.validation.auth import (
+    LoginBody,
+    RegisterBody,
+    ResetPasswordBody,
+)
 from ...models.account import AccountModel
 from ...utils import auth, errorHandler
 from ..email import EmailService
@@ -10,7 +15,6 @@ from .email_content import (
     build_register_email_content,
     build_reset_password_email_content,
 )
-from .validation import RegisterBody, ResetPasswordBody
 
 
 def generate_registration_email(email: str):
@@ -26,12 +30,52 @@ def generate_registration_email(email: str):
 
 class AuthService:
 
-    def login(self) -> None:
-        pass
+    def login(self, body: LoginBody):
+        username = body.username
+        password = body.password
+        account = AccountModel(username=username)
+        user = account.get_password()
+        if not user:
+            raise HTTPException(status_code=400, detail=ErrorCode.BAD_REQUEST)
+        is_valid_password = auth.verify_password(password, user["password"])
+        if not is_valid_password:
+            raise HTTPException(status_code=400, detail=ErrorCode.BAD_REQUEST)
+
+        account_details = account.get_account()
+
+        if not account_details["is_active"]:
+            raise HTTPException(
+                status_code=400, detail=ErrorCode.ACCOUNT_UNVERIFIED
+            )
+        auth_token = {
+            "email": account_details["email"],
+            "active": account_details["is_active"],
+            "country": account_details["country"],
+            "role": account_details["role"],
+        }
+
+        refresh_token = {
+            "email": account_details["email"],
+            "remember_me": body.rememberMe,
+        }
+        serialize_auth_token = auth.generate_auth_token(**auth_token)
+        serialize_refresh_token = auth.generate_refresh_token(**refresh_token)
+        return {
+            "result": {
+                "token": serialize_auth_token,
+                "refresh_token": serialize_refresh_token,
+            }
+        }
 
     @errorHandler.integrity_error
     def register(self, body: RegisterBody, background_tasks: BackgroundTasks):
-        hashed_password = auth.encrypt(body.password)
+        password = body.password
+        confirmPassword = body.confirmPassword
+        if password != confirmPassword:
+            raise HTTPException(
+                status_code=400, detail=ErrorCode.PASSWORD_MISMATCH
+            )
+        hashed_password = auth.hash_password(password)
         body.password = hashed_password
         account = AccountModel(**body.model_dump())
         transaction(lambda conn: account.create_account(conn))
@@ -87,7 +131,12 @@ class AuthService:
     ):
         email = auth.decode_token(body.token)["email"]
         password = body.password
-        hashed_password = auth.encrypt(password)
+        confirmPassword = body.confirmPassword
+        if password != confirmPassword:
+            raise HTTPException(
+                status_code=400, detail=ErrorCode.PASSWORD_MISMATCH
+            )
+        hashed_password = auth.hash_password(password)
         account = AccountModel(email=email)
         transaction(
             lambda conn: account.update_account(
@@ -104,5 +153,21 @@ class AuthService:
         )
         return {"result": "ok"}
 
-    def refresh_token(self):
-        pass
+    def refresh_token(self, token: str):
+        email = auth.decode_token(token)["email"]
+        account = AccountModel(email=email)
+        account_details = account.get_account()
+        if not account_details:
+            raise HTTPException(
+                status_code=401, detail=ErrorCode.INVALID_TOKEN
+            )
+
+        auth_token = {
+            "email": account_details["email"],
+            "active": account_details["is_active"],
+            "country": account_details["country"],
+            "role": account_details["role"],
+        }
+
+        new_token = auth.generate_auth_token(**auth_token)
+        return {"result": new_token}

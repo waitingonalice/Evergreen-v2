@@ -1,13 +1,14 @@
 from fastapi import APIRouter, BackgroundTasks
 
-from ...services.auth import AuthService, validation
+from ...dependencies.validation import auth as validation
+from ...services.auth import AuthService
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
 
 
 @router.post("/login")
-def login():
-    return AuthService().login()
+def login(body: validation.LoginBody):
+    return AuthService().login(body)
 
 
 @router.post("/register")
@@ -48,5 +49,5 @@ def reset_password(
 
 
 @router.post("/refresh-token")
-def refresh_token():
-    pass
+def refresh_token(body: validation.ValidateToken):
+    return AuthService().refresh_token(body.token)

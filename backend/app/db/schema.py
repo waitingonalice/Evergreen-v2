@@ -17,4 +17,8 @@ class Account(Base):
     is_active = Column(Boolean, default=False, nullable=False)
     country = Column(String, nullable=False)
     createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column(DateTime(timezone=True), onupdate=func.now())
+    updatedAt = Column(
+        DateTime(timezone=True),
+        server_default=func.now(),
+        onupdate=func.current_timestamp(),
+    )

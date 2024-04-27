@@ -22,13 +22,14 @@ function Register() {
   const [formInput, setFormInput] = useState<RegisterNewUserType>({
     username: "",
     password: "",
+    confirmPassword: "",
     email: "",
     country: "",
     secret: "",
     role: RoleEnum.ADMIN,
   });
   const { validate, onSubmit, errors } = useForm({
-    zod: registerSchema,
+    zod: registerSchema(formInput),
     data: formInput,
   });
 
@@ -109,6 +110,15 @@ function Register() {
             autoComplete="current-password"
             showError={Boolean(errors.password)}
             errorMessage={errors.password}
+          />
+          <FormInput
+            label="Confirm Password"
+            value={formInput.confirmPassword}
+            onChange={(val) => handleOnChange("confirmPassword", val)}
+            isPassword
+            required
+            showError={Boolean(errors.confirmPassword)}
+            errorMessage={errors.confirmPassword}
           />
           <FormNativeSelect
             label="Country"

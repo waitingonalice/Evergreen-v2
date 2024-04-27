@@ -10,9 +10,9 @@ alembic = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 email-validator = "*"
-cryptography = "*"
 jinja2 = "*"
 pyjwt = "*"
+bcrypt = "*"
 
 [dev-packages]
 black = "*"
