@@ -8,7 +8,6 @@ from ..utils.auth import decode_token
 
 def verify_token(request: Request, token: Optional[str] = Header(None)):
     header_token = request.headers.get("Authorization")
-
     if header_token is None and token is None:
         raise HTTPException(status_code=401, detail=ErrorCode.UNAUTHORIZED)
     try:

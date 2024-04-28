@@ -1823,10 +1823,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@waitingonalice/design-system@^1.2.36":
-  version "1.2.37"
-  resolved "https://registry.yarnpkg.com/@waitingonalice/design-system/-/design-system-1.2.37.tgz#1b033f2d20bab51572c64da13c2909b7469991ae"
-  integrity sha512-uSp/cafoq/OrDJBisUFx7Z/064YhSPDIQTTPnFeCDbEnpcPT8nVSyM6qzxJ1jVoS7yFljnlyAAtgTWc1W+hiAg==
+"@waitingonalice/design-system@^1.2.42":
+  version "1.2.42"
+  resolved "https://registry.yarnpkg.com/@waitingonalice/design-system/-/design-system-1.2.42.tgz#0f1d39a7a269f55ca8a4f17842d44ba5e8576a22"
+  integrity sha512-+pDwHjyyZ4F4MNXUAhAEK51VIP2JwzbwnZMnc143boqalAMWuWVdfoqGACnTvIE1eNLPmp/DWSP110JoWx0MrA==
   dependencies:
     "@radix-ui/react-dialog" "^1.0.5"
     "@radix-ui/react-progress" "^1.0.3"

@@ -8,13 +8,12 @@ import {
   Button,
   Form,
   FormInput,
-  Link,
   Spinner,
   Text,
   useForm,
   useToast,
 } from "@waitingonalice/design-system";
-import { AuthLayout } from "@/components";
+import { AuthLayout, Link } from "@/components";
 import { clientRoutes } from "@/constants";
 import { useResetPassword } from "./loaders/resetPassword";
 

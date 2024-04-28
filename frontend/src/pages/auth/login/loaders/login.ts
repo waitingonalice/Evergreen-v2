@@ -1,5 +1,5 @@
 import { useMutation } from "react-query";
-import { apiRoutes } from "@/constants";
+import { RoleEnum, apiRoutes } from "@/constants";
 import { AxiosFactory } from "@/utils";
 
 interface LoginInputType {
@@ -12,6 +12,7 @@ interface LoginResponseType {
   result: {
     token: string;
     refresh_token: string;
+    role: RoleEnum;
   };
 }
 export const useLogin = () => {

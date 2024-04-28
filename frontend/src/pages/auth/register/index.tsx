@@ -6,12 +6,11 @@ import {
   Form,
   FormInput,
   FormNativeSelect,
-  Link,
   Spinner,
   useForm,
   useToast,
 } from "@waitingonalice/design-system";
-import { AuthLayout } from "@/components";
+import { AuthLayout, Link } from "@/components";
 import { CountryEnum, RoleEnum, clientRoutes } from "@/constants";
 import { generateOptions } from "@/utils";
 import RegistrationSuccess from "./components/RegistrationSuccess";
