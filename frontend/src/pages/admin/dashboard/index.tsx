@@ -27,7 +27,7 @@ const appNavigation = [
   },
   {
     name: "Portfolio",
-    href: "https://github.com/waitingonalice/Portfolio-Website",
+    href: "https://wilson-sie.dev/",
     Icon: AcademicCapIcon,
   },
   {
