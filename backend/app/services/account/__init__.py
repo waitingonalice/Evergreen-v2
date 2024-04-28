@@ -11,5 +11,5 @@ class AccountService(AccountModel):
     def get_me(self):
         account = self.get_account()
         if not account:
-            raise HTTPException(status_code=404, detail=ErrorCode.BAD_REQUEST)
-        return account
+            raise HTTPException(status_code=400, detail=ErrorCode.BAD_REQUEST)
+        return {"result": account}

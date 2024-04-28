@@ -5,13 +5,12 @@ import { v4 as uuid } from "uuid";
 import { XCircleIcon } from "@heroicons/react/16/solid";
 import {
   Button,
-  Link,
   Spinner,
   Text,
   ToastContextBaseProps,
   useToast,
 } from "@waitingonalice/design-system";
-import { AuthLayout } from "@/components";
+import { AuthLayout, Link } from "@/components";
 import { clientRoutes } from "@/constants";
 import { useResendEmail } from "../register/loaders/register";
 

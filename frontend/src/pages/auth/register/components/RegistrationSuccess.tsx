@@ -4,12 +4,12 @@ import { v4 as uuid } from "uuid";
 import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import {
   Button,
-  Link,
   Spinner,
   Text,
   ToastContextBaseProps,
   useToast,
 } from "@waitingonalice/design-system";
+import { Link } from "@/components";
 import { clientRoutes } from "@/constants";
 import { useResendEmail } from "../loaders/register";
 

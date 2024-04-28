@@ -5,7 +5,6 @@ export const clientRoutes = {
   admin: {
     dashboard: "/admin",
   },
-
   auth: {
     login: "/login",
     logout: "/logout",
@@ -15,10 +14,14 @@ export const clientRoutes = {
     resetPassword: "/reset-password",
   },
   profile: { index: "/profile" },
+  dashboard: "/",
 };
 
 export const apiRoutes = {
   v1: {
+    account: {
+      me: `${endpointV1}/account/me`,
+    },
     auth: {
       login: `${endpointV1}/auth/login`,
       register: `${endpointV1}/auth/register`,

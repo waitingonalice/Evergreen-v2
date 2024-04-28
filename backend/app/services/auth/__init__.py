@@ -64,6 +64,7 @@ class AuthService:
             "result": {
                 "token": serialize_auth_token,
                 "refresh_token": serialize_refresh_token,
+                "role": account_details["role"],
             }
         }
 
@@ -75,6 +76,7 @@ class AuthService:
             raise HTTPException(
                 status_code=400, detail=ErrorCode.PASSWORD_MISMATCH
             )
+        del body.confirmPassword
         hashed_password = auth.hash_password(password)
         body.password = hashed_password
         account = AccountModel(**body.model_dump())

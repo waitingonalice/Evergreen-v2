@@ -2,8 +2,16 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ToastProvider, cn } from "@waitingonalice/design-system/";
+import { AppProvider } from "@/components/context";
 import "@/styles/globals.css";
 import { isBrowser } from "@/utils";
+import { UserResponse, getUser } from "@/utils/auth";
+
+export interface CustomProps {
+  customProps: {
+    user: UserResponse["result"];
+  };
+}
 
 // Create a client
 const queryClient = new QueryClient({
@@ -15,7 +23,11 @@ const queryClient = new QueryClient({
   },
 });
 
-export default function App({ Component, pageProps }: AppContext & AppProps) {
+export default function App({
+  Component,
+  pageProps,
+  customProps,
+}: AppContext & AppProps & CustomProps) {
   const isMobilePhone = isBrowser() && window.screen.width < 768;
   const isTablet = isBrowser() && window.screen.width < 1280;
   const renderViewport = () => {
@@ -27,6 +39,7 @@ export default function App({ Component, pageProps }: AppContext & AppProps) {
     }
     return "initial-scale=1.0";
   };
+
   return (
     <>
       <Head>
@@ -37,13 +50,36 @@ export default function App({ Component, pageProps }: AppContext & AppProps) {
         <title>Evergreen</title>
         <link rel="icon" href="/code-bracket.svg" />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <main>
+      <AppProvider customProps={customProps}>
+        <QueryClientProvider client={queryClient}>
           <ToastProvider>
             <Component {...pageProps} />
           </ToastProvider>
-        </main>
-      </QueryClientProvider>
+        </QueryClientProvider>
+      </AppProvider>
     </>
   );
 }
+
+App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
+  let pageProps = {};
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
+  }
+
+  const props = {
+    pageProps,
+    Component,
+    router,
+  };
+  const user = await getUser(ctx);
+  if (!user?.data.result) return props;
+  const { result } = user.data;
+
+  return {
+    ...props,
+    customProps: {
+      user: result,
+    },
+  };
+};

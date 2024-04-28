@@ -8,15 +8,13 @@ import axios, {
 } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { GetServerSidePropsContext, NextPageContext } from "next";
+import Router from "next/router";
 import { RoleEnum, apiRoutes, clientRoutes } from "@/constants";
-import { getCookie, removeCookie, setCookie } from "./cookies";
+import { generateAuthToken } from "./auth";
+import { getCookie, removeCookie } from "./cookies";
 import { nowInUnixSeconds } from "./formatting";
 
 export type NextSSRType = GetServerSidePropsContext | NextPageContext;
-
-interface RefreshTokenResponseType {
-  result: string;
-}
 
 interface AuthToken {
   exp: number;
@@ -29,58 +27,55 @@ interface AuthToken {
 class AxiosFactory {
   private axios: AxiosInstance;
 
+  redirectPath: (path: string) => void;
+
   constructor(ctx?: NextSSRType) {
-    const factoryHelper = (ctx?: NextSSRType) => {
-      const redirect = (path: string) => {
-        if (ctx) {
-          ctx.res?.writeHead(302, { Location: path });
-          return;
-        }
-        window.location.href = path;
-      };
+    const authRoutes = Object.values(apiRoutes.v1.auth);
 
-      return {
-        async requestMiddleware(config: InternalAxiosRequestConfig) {
-          const authToken = getCookie("token", ctx);
-          const refreshToken = getCookie("refresh_token", ctx);
-          const controller = new AbortController();
-          if (!authToken || !refreshToken) {
-            config.signal = controller.signal;
-            controller.abort();
-            removeCookie("token", ctx);
-            removeCookie("refresh_token", ctx);
-            redirect(`${clientRoutes.auth.login}?expired=true`);
-            return config;
-          }
-
-          const decodedAuthToken = jwtDecode<AuthToken>(authToken);
-          const { exp } = decodedAuthToken;
-          const now = nowInUnixSeconds();
-
-          if (now < exp) return config;
-          const response = await axios.post<RefreshTokenResponseType>(
-            apiRoutes.v1.auth.refreshToken,
-            { token: refreshToken },
-          );
-
-          const { result } = response.data;
-          setCookie("token", result, undefined, ctx);
-          config.headers.Authorization = authToken;
-          return config;
-        },
-
-        async responseMiddleware(error: AxiosError) {
-          if (error.response?.status === 401) {
-            removeCookie("token", ctx);
-            removeCookie("refresh_token", ctx);
-            redirect(`${clientRoutes.auth.login}?expired=true`);
-          }
-          return Promise.reject(error);
-        },
-      };
+    const redirect = (path: string) => {
+      if (ctx?.res) {
+        ctx.res.writeHead(302, { Location: path });
+        ctx.res.end();
+      } else {
+        Router.replace(path);
+      }
     };
 
-    const axiosHelper = factoryHelper(ctx);
+    async function requestMiddleware(config: InternalAxiosRequestConfig) {
+      const authToken = getCookie("token", ctx);
+      const refreshToken = getCookie("refresh_token", ctx);
+      const controller = new AbortController();
+      if (authRoutes.includes(config.url || "")) return config;
+      if (!authToken || !refreshToken) {
+        config.signal = controller.signal;
+        controller.abort();
+        removeCookie("token", ctx);
+        removeCookie("refresh_token", ctx);
+        redirect(`${clientRoutes.auth.login}?expired=true`);
+        return config;
+      }
+
+      const decodedAuthToken = jwtDecode<AuthToken>(authToken);
+      const { exp } = decodedAuthToken;
+      const now = nowInUnixSeconds();
+
+      if (now > exp) {
+        const refreshedAuthToken = await generateAuthToken(refreshToken);
+        config.headers.Authorization = refreshedAuthToken;
+      } else {
+        config.headers.Authorization = authToken;
+      }
+      return config;
+    }
+
+    async function responseMiddleware(error: AxiosError) {
+      if (error.response?.status === 401) {
+        removeCookie("token", ctx);
+        removeCookie("refresh_token", ctx);
+        redirect(`${clientRoutes.auth.login}?expired=true`);
+      }
+      return Promise.reject(error);
+    }
 
     const axiosClient = axios.create({
       baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -89,17 +84,22 @@ class AxiosFactory {
         "Content-Type": "application/json",
       },
     });
-    axiosClient.interceptors.request.use(axiosHelper.requestMiddleware);
+    axiosClient.interceptors.request.use(requestMiddleware);
     axiosClient.interceptors.response.use(
       (response) => response,
-      axiosHelper.responseMiddleware,
+      responseMiddleware,
     );
 
+    this.redirectPath = redirect;
     this.axios = axiosClient;
   }
 
   get client() {
     return this.axios;
+  }
+
+  redirect(path: string) {
+    this.redirectPath(path);
   }
 }
 
