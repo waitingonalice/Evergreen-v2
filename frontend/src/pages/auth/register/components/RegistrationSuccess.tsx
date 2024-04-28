@@ -52,7 +52,7 @@ function RegistrationSuccess({ email }: RegistrationSuccessProps) {
   };
   return (
     <div className="flex flex-col gap-y-4 items-center justify-center text-center p-8">
-      <CheckCircleIcon className="w-20 h-auto text-primary-main" />
+      <CheckCircleIcon className="w-20 h-auto text-success-dark" />
       <Text type="subhead-1">Registration Success!</Text>
       <Text type="subhead-2-bold">
         A verification email has been sent to your email address.
