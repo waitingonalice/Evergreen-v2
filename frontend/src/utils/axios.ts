@@ -10,8 +10,13 @@ import { jwtDecode } from "jwt-decode";
 import { GetServerSidePropsContext, NextPageContext } from "next";
 import Router from "next/router";
 import { RoleEnum, apiRoutes, clientRoutes } from "@/constants";
-import { generateAuthToken } from "./auth";
-import { getCookie, removeCookie } from "./cookies";
+import {
+  AUTH_KEY,
+  REFRESH_KEY,
+  generateAuthToken,
+  removeCookieTokens,
+} from "./auth";
+import { getCookie } from "./cookies";
 import { nowInUnixSeconds } from "./formatting";
 
 export type NextSSRType = GetServerSidePropsContext | NextPageContext;
@@ -42,15 +47,14 @@ class AxiosFactory {
     };
 
     async function requestMiddleware(config: InternalAxiosRequestConfig) {
-      const authToken = getCookie("token", ctx);
-      const refreshToken = getCookie("refresh_token", ctx);
+      const authToken = getCookie(AUTH_KEY, ctx);
+      const refreshToken = getCookie(REFRESH_KEY, ctx);
       const controller = new AbortController();
       if (authRoutes.includes(config.url || "")) return config;
       if (!authToken || !refreshToken) {
         config.signal = controller.signal;
         controller.abort();
-        removeCookie("token", ctx);
-        removeCookie("refresh_token", ctx);
+        removeCookieTokens(ctx);
         redirect(`${clientRoutes.auth.login}?expired=true`);
         return config;
       }
@@ -70,8 +74,7 @@ class AxiosFactory {
 
     async function responseMiddleware(error: AxiosError) {
       if (error.response?.status === 401) {
-        removeCookie("token", ctx);
-        removeCookie("refresh_token", ctx);
+        removeCookieTokens(ctx);
         redirect(`${clientRoutes.auth.login}?expired=true`);
       }
       return Promise.reject(error);

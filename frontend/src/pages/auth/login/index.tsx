@@ -14,7 +14,7 @@ import {
 } from "@waitingonalice/design-system";
 import { AuthLayout, Link } from "@/components";
 import { RoleEnum, clientRoutes } from "@/constants";
-import { setCookie } from "@/utils";
+import { AUTH_KEY, REFRESH_KEY, setCookie } from "@/utils";
 import { useRedirect } from "./hooks/useRedirect";
 import { useLogin } from "./loaders/login";
 import { loginSchema } from "./utils/validation";
@@ -52,8 +52,8 @@ function Login() {
     try {
       const data = await login(formInput);
       if (!data) return;
-      setCookie("token", data.result.token);
-      setCookie("refresh_token", data.result.refresh_token);
+      setCookie(AUTH_KEY, data.result.token);
+      setCookie(REFRESH_KEY, data.result.refresh_token);
       const redirectRoute =
         data.result.role === RoleEnum.ADMIN
           ? clientRoutes.admin.dashboard

@@ -4,7 +4,7 @@ import { clientRoutes } from "@/constants";
 export function ErrorPage() {
   return (
     <>
-      <main className="grid min-h-screen place-items-center px-6 py-24 sm:py-32 lg:px-8">
+      <main className="grid min-h-screen place-items-center px-6 py-24 sm:py-32 lg:px-8 bg-white">
         <div className="text-center">
           <Text type="body-bold" className="text-primary-main">
             404

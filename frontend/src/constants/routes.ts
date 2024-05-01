@@ -3,7 +3,10 @@ const endpointV1 = `${endpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
   admin: {
-    dashboard: "/admin",
+    dashboard: "/admin/dashboard",
+    cv: {
+      index: "/admin/cv",
+    },
   },
   auth: {
     login: "/login",
