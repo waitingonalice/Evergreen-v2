@@ -13,6 +13,8 @@ email-validator = "*"
 jinja2 = "*"
 pyjwt = "*"
 bcrypt = "*"
+pytz = "*"
+weasyprint = "*"
 
 [dev-packages]
 black = "*"
@@ -21,6 +23,7 @@ mypy = "*"
 pre-commit = "*"
 flake8 = "*"
 autoflake = "*"
+types-pytz = "*"
 
 [requires]
 python_version = "3.11"

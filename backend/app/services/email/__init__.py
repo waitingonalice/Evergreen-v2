@@ -7,7 +7,7 @@ from jinja2 import Template
 
 from ...constants.error import ErrorCode
 from ...utils.environment import Env
-from ...utils.formatting import find_file
+from ...utils.formatting import find_dir
 
 
 class EmailService:
@@ -46,7 +46,7 @@ class EmailService:
         ):
             raise ValueError(ErrorCode.MISSING_EMAIL_CLIENT_CREDS)
 
-        html_template_path = find_file(self.template)
+        html_template_path = find_dir(self.template)
         with open(f"{html_template_path}/index.html") as file:
             html = file.read()
             template = Template(html)

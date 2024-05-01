@@ -9,11 +9,11 @@
       content="width=device-width,initial-scale=1,shrink-to-fit=no"
     />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="./Resume_files/font-awesome.min.css" />
+    <!-- <link rel="stylesheet" href="./Resume_files/font-awesome.min.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
+    /> -->
     <title>Resume</title>
     <style>
       @import url("https://fonts.googleapis.com/css?family=Quicksand:400,700");
@@ -84,27 +84,24 @@
         min-width: 2rem;
       }
 
-      address {
-        font-style: normal;
-      }
-
       p {
         font-size: 1rem;
         margin-top: 0.5rem;
         margin-bottom: 0;
       }
 
-      a {
-        text-decoration: none;
-        font-size: 14px;
+      li {
+        line-height: 1.5;
+        font-size: 16px;
       }
 
-      #projects {
-        position: relative;
-      }
-
-      #skills {
-        position: relative;
+      i,
+      a,
+      a:visited,
+      a:link,
+      a:active,
+      a:focus {
+        color: #395;
       }
 
       #skills span {
@@ -139,6 +136,10 @@
         display: inline;
       }
 
+      .title{
+        font-weight: 700;
+      }
+
       #phone {
         font-size: 1.25rem;
         font-weight: bold;
@@ -147,29 +148,6 @@
 
       #location {
         font-size: 0.85rem;
-      }
-
-      #languages {
-        column-count: 4;
-      }
-
-      li {
-        line-height: 1.5;
-        font-size: 16px;
-      }
-
-      i,
-      a,
-      a:visited,
-      a:link,
-      a:active,
-      a:focus,
-      #languages {
-        color: #395;
-      }
-
-      #map-icon {
-        color: #395;
       }
 
       #contact-mini > div {
@@ -221,10 +199,6 @@
           margin-left: 4%;
         }
 
-        #languages {
-          column-count: 1;
-        }
-
         #email,
         #website {
           font-size: 0.9em;
@@ -253,24 +227,14 @@
 
       @media print {
         @page {
-          size: 900px;
+          size: A4;
+          margin: 0mm;
         }
 
         html,
         body {
           background: #fff;
           font-size: 16px;
-          width: 900px;
-        }
-
-        a,
-        a:visited,
-        a:link,
-        a:active,
-        a:focus,
-        #languages label {
-          text-decoration: none;
-          color: #000;
         }
 
         main {
@@ -293,10 +257,6 @@
           display: none;
         }
 
-        #languages {
-          column-count: 1;
-        }
-
         .position {
           opacity: 1 !important;
         }
@@ -316,28 +276,22 @@
           <div>
             <address id="contact-mini">
               <div>
-                <a class="aboutMe" href="mailto:wilson.sie.dev@gmail.com"
-                  ><i class="fa fa-at"></i> wilson.sie.dev@gmail.com</a
-                >
-                <a class="aboutMe" href="tel:+6597275272">
-                  <i class="fa fa-phone"></i>
-                  <span itemprop="telephone">(65)9727 5272</span>
+                <a class="aboutMe" href="mailto:wilson.sie.dev@gmail.com">
+                  wilson.sie.dev@gmail.com
                 </a>
-                <span id="map-icon" class="aboutMe"
-                  ><i class="fa fa-map"></i> Singapore</span
-                >
+                <span style="color:#385;" class="aboutMe">Singapore</span>
               </div>
             </address>
             <a
               class="aboutMe"
-              href="https://github.com/waitingonalice/waitingonalice"
-              ><i class="fa fa-github"></i> Github</a
-            >
+              href="https://github.com/waitingonalice/waitingonalice">
+              Github
+            </a>
             <a
               class="aboutMe"
-              href="https://www.linkedin.com/in/wilson-sie-6a3485155/"
-              ><i class="fa fa-linkedin"></i> LinkedIn</a
-            >
+              href="https://www.linkedin.com/in/wilson-sie-6a3485155/">
+              LinkedIn
+            </a>
           </div>
         </header>
 
@@ -398,14 +352,12 @@
             itemtype="http://schema.org/EducationalOrganization"
           >
             {% for cert in certifications %}
-              <li>
-                <span itemprop="name">{{ cert["title"] }}</span>
-                <ul>
-                  <li itemprop="award">
-                    {{ cert["description"] }}
-                  </li>
-                </ul>
-              </li>
+            <li>
+              <div class="title">
+                {{ cert["title"] }}
+              </div>
+              {{ cert["description"] }}
+            </li>
             {% endfor %}
           </ul>
         </section>
@@ -420,18 +372,19 @@
           <h4>
             <ul itemprop="description">
               {% for project in projects %}
-                <li>{{ project["title"] }}</li>
-                <ul>
+              <li>
                   <div>
-                    <a href="{{ project["link"] }}" target="_blank">
-                      <i class="fa fa-github"></i> GitHub
+                    <a href="{{ project["link"] }}" target="_blank" class="title">
+                      {{ project["title"] }}
                     </a>
                   </div>
-                  <li>{{ project["description"] }}</li>
+                  {{ project["description"] }}
                   {% for tech in project["techstack"] %}
+                  <div>
                     <small class="techstack">{{ tech }}</small>
+                  </div>
                   {% endfor %}
-                </ul>
+                </li>
               {% endfor %}
             </ul>
           </h4>

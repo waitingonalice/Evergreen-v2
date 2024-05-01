@@ -1,14 +1,12 @@
-from datetime import datetime
-
-from pydantic import BaseModel
+from pydantic import BaseModel, HttpUrl
 
 
 class ExperienceModel(BaseModel):
     company_name: str
     role: str
     employment: str
-    start: datetime
-    end: datetime
+    start: str
+    end: str
     job_description: list[str]
 
 
@@ -19,6 +17,7 @@ class CertificationModel(BaseModel):
 
 class ProjectModel(CertificationModel):
     techstack: list[str]
+    link: HttpUrl
 
 
 class EditResumeBody(BaseModel):

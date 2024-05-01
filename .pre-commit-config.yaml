@@ -28,7 +28,7 @@ repos:
     rev: "v1.8.0"
     hooks:
       - id: mypy
-
+        additional_dependencies: ["types-pytz"]
   - repo: https://github.com/PyCQA/flake8
     rev: 7.0.0
     hooks:
