@@ -12,3 +12,9 @@ class Bucket(Enum):
 
 class Timezone(Enum):
     ASIA_SINGAPORE = "Asia/Singapore"
+
+
+class Status(Enum):
+    PENDING = "PENDING"
+    SUCCESS = "SUCCESS"
+    FAILED = "FAILED"

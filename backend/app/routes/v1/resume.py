@@ -9,22 +9,21 @@ router = APIRouter(
 )
 
 
-# Returns details of latest CV
-@router.get("/me")
-def get_me():
-    return ResumeService().me()
-
-
 # Returns list of past edited CVs
 @router.get("/records")
 def list_edits():
     return ResumeService().list_edits()
 
 
-@router.post("/edit")
-def edit_cv(
+@router.get("/{record_id}")
+def get_record(record_id: str):
+    return ResumeService().fetch_cv_record(record_id)
+
+
+@router.post("/create")
+def create_cv(
     body: EditResumeBody,
     user: verify_token_deps,
     background_task: BackgroundTasks,
 ):
-    return ResumeService().edit_cv(body, user, background_task)
+    return ResumeService(user).create_cv(body, background_task)

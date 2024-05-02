@@ -3,7 +3,6 @@ from weasyprint import HTML
 
 from ...constants.enums import Bucket, Timezone
 from ...dependencies.validation.resume import EditResumeBody
-from ...models.account import AccountModel
 from ...utils.formatting import (
     find_dir,
     generate_dir,
@@ -29,9 +28,8 @@ def generate_pdf(dirname: str):
     weasyprint.write_pdf(f"{dirname}/resume.pdf", options=config)
 
 
-def generate_cv(body: EditResumeBody, user: dict):
-    account = AccountModel(email=user["email"])
-    username: str = account.get_account()["username"]
+def generate_cv(body: EditResumeBody, account: dict):
+    username: str = account["username"]
     time_now = get_timestamp_now(Timezone.ASIA_SINGAPORE.value, time_format)
     bucket = Bucket.RESUME.value
     dirname = f"reports/{username}/{bucket}/{time_now}"
@@ -41,3 +39,4 @@ def generate_cv(body: EditResumeBody, user: dict):
         dirname,
     )
     generate_pdf(dirname)
+    return dirname
