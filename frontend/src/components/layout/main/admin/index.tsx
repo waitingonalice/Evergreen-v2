@@ -1,23 +1,24 @@
 import { cn } from "@waitingonalice/design-system/utils/cn";
-import { Topbar } from "./Topbar";
+import { Topbar, TopbarProps } from "./Topbar";
 
-interface LayoutProps {
+interface LayoutProps extends TopbarProps {
   children: React.ReactNode;
 }
 
-function Layout({ children }: LayoutProps) {
+function Layout({ children, onBackClick, ctxButtons }: LayoutProps) {
   return (
-    <div>
-      <Topbar />
-      <>{children}</>
-    </div>
+    <>
+      <Topbar onBackClick={onBackClick} ctxButtons={ctxButtons} />
+      {children}
+    </>
   );
 }
 
 interface ContentProps {
   className?: string;
+  children: React.ReactNode;
 }
-function Content({ children, className }: LayoutProps & ContentProps) {
+function Content({ children, className }: ContentProps) {
   return (
     <main
       className={cn(
@@ -32,5 +33,6 @@ function Content({ children, className }: LayoutProps & ContentProps) {
 }
 
 Layout.Content = Content;
+Layout.Header = Topbar;
 
 export { Layout as AdminLayout };

@@ -75,7 +75,8 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
   const user = await getUser(ctx);
   if (!user?.data.result) return props;
   const { result } = user.data;
-
+  // eslint-disable-next-line no-console
+  console.log(result);
   return {
     ...props,
     customProps: {

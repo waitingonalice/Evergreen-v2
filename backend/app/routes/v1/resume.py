@@ -1,7 +1,7 @@
 from fastapi import APIRouter, BackgroundTasks, Depends
 
 from ...dependencies import verify, verify_token_deps
-from ...dependencies.validation.resume import EditResumeBody
+from ...dependencies.validation.resume import EditResumeBody, ListResumeRecords
 from ...services.resume import ResumeService
 
 router = APIRouter(
@@ -11,13 +11,13 @@ router = APIRouter(
 
 # Returns list of past edited CVs
 @router.get("/records")
-def list_edits():
-    return ResumeService().list_edits()
+def list_edits(user: verify_token_deps, query: ListResumeRecords = Depends()):
+    return ResumeService(user).list_edits(index=query.index, limit=query.limit)
 
 
-@router.get("/{record_id}")
-def get_record(record_id: str):
-    return ResumeService().fetch_cv_record(record_id)
+@router.get("/{id}")
+def get_record(id: int, user: verify_token_deps):
+    return ResumeService(user).get_record(id)
 
 
 @router.post("/create")

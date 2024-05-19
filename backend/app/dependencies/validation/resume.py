@@ -1,3 +1,7 @@
+from datetime import date
+from typing import Annotated
+
+from fastapi import Query
 from pydantic import BaseModel, HttpUrl
 
 
@@ -5,8 +9,8 @@ class ExperienceModel(BaseModel):
     company_name: str
     role: str
     employment: str
-    start: str
-    end: str
+    start: date
+    end: date
     job_description: list[str]
 
 
@@ -26,3 +30,8 @@ class EditResumeBody(BaseModel):
     experiences: list[ExperienceModel]
     certifications: list[CertificationModel]
     projects: list[ProjectModel]
+
+
+class ListResumeRecords(BaseModel):
+    index: int = 0
+    limit: Annotated[int, Query(gt=0)] = 10

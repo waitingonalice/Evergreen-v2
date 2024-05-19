@@ -5,13 +5,17 @@ interface GridProps {
   children: React.ReactNode;
   className?: string;
   title?: string;
+  callToAction?: React.ReactNode;
 }
-function Grid({ title, children, className }: GridProps) {
+function Grid({ title, children, className, callToAction }: GridProps) {
   return (
     <div className="w-full max-w-screen-2xl">
-      <Text className="text-secondary-1 mb-4" type="subhead-1-bold">
-        {title}
-      </Text>
+      <div className="flex justify-between items-center mb-4">
+        <Text className="text-secondary-1" type="subhead-1-bold">
+          {title}
+        </Text>
+        {callToAction}
+      </div>
       <div
         className={cn(
           "md:p-8",

@@ -8,6 +8,6 @@ export interface Account {
   country: string;
   password: string;
   is_active: boolean;
-  updatedAt: string;
-  createdAt: string;
+  updated_at: string;
+  created_at: string;
 }

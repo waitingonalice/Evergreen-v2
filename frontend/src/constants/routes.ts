@@ -6,6 +6,7 @@ export const clientRoutes = {
     dashboard: "/admin/dashboard",
     cv: {
       index: "/admin/cv",
+      create: "/admin/cv/create",
     },
   },
   auth: {

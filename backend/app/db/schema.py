@@ -25,8 +25,8 @@ class Account(Base):
     role = Column(String, default="USER", nullable=False)
     is_active = Column(Boolean, default=False, nullable=False)
     country = Column(String, nullable=False)
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column(
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.current_timestamp(),
@@ -39,7 +39,7 @@ class FileRecord(Base):
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
     path = Column(String)
     status = Column(String)
-    created_time = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     account_id = Column(
         UUID(as_uuid=True),
         ForeignKey("Account.id"),
@@ -58,8 +58,8 @@ class Resume(Base):
     # Dynamic content that may change, stored as JSON.
     # Currently supports Languages, Techstack, Experiences, Certifications, Projects
     content = Column(Text)
-    createdAt = Column(DateTime(timezone=True), server_default=func.now())
-    updatedAt = Column(
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
         onupdate=func.current_timestamp(),
