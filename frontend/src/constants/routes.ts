@@ -35,5 +35,9 @@ export const apiRoutes = {
       resendEmail: `${endpointV1}/auth/confirmation-email`,
       refreshToken: `${endpointV1}/auth/refresh-token`,
     },
+    cv: {
+      create: `${endpointV1}/cv/create`,
+      get: (id: string) => `${endpointV1}/cv/${id}`,
+    },
   },
 };

@@ -1,4 +1,6 @@
 import json
+from datetime import date
+from typing import Any
 from uuid import uuid4
 
 from fastapi import BackgroundTasks, HTTPException
@@ -6,21 +8,21 @@ from sqlalchemy import Connection
 
 from ...constants import enums, error
 from ...db.utils import transaction
-from ...dependencies.validation.resume import EditResumeBody, ExperienceModel
+from ...dependencies.validation.resume import EditResumeBody
 from ...models.account import AccountModel
 from ...models.file_record import FileRecordModel
 from ...models.resume import ResumeModel
-from ...services.storage.file import File
 from ...utils.errorHandler import value_error
-from .utils import generate_cv
+from ..storage import StorageService
+from .utils import generate_pdf
 
 
-class ResumeService:
+class ResumeService(AccountModel):
     @value_error
     def __init__(self, user: dict):
-        account = AccountModel(email=user["email"]).get_account()
-        self.account = account
-        if account is None:
+        super().__init__(email=user["email"])
+        self.account = self.get_account()
+        if self.account is None:
             raise ValueError(error.ErrorCode.UNAUTHORIZED)
 
     # Creates new record in database to store updated values for cv while generates a new cv
@@ -38,38 +40,64 @@ class ResumeService:
             )
             resume = ResumeModel(file_record_id=uuid)
 
-            def format_date(model: ExperienceModel):
-                model.start = model.start.strftime("%Y-%B")
-                model.end = model.end.strftime("%Y-%B")
-                return model
+            body_dict = body.model_dump()
 
-            formatted_data = [format_date(exp) for exp in body.experiences]
+            def format_date(model: dict[str, Any]):
+                update = model.copy()
+                start_date: date = update["start"]
+                end_date: date = update["end"]
+                update["start"] = start_date.strftime("%Y-%B")
+                update["end"] = end_date.strftime("%Y-%B")
+                return update
 
-            body.experiences = formatted_data
-            stringify_content = body.model_dump_json()
+            formatted_experience = [
+                format_date(exp) for exp in body_dict["experiences"]
+            ]
+            formatted_projects = [
+                {**exp, "link": str(exp["link"])}
+                for exp in body_dict["projects"]
+            ]
+
+            body_dict["experiences"] = formatted_experience
+            body_dict["projects"] = formatted_projects
+            stringify_content = json.dumps(body_dict)
 
             def add_entries(conn: Connection):
                 file_record.create_file_record(conn)
                 resume.create_cv_record(conn, content=stringify_content)
 
             transaction(add_entries)
+            background_task.add_task(
+                self.trigger_job, content=body_dict, file_id=uuid
+            )
+            return {"result": uuid}
 
-            background_task.add_task(self.trigger_job, body=body, file_id=uuid)
-            return body
         except Exception as e:
             print(e)
             raise HTTPException(
                 status_code=500, detail=error.ErrorCode.INTERNAL_SERVER_ERROR
             )
 
-    def trigger_job(self, body: EditResumeBody, file_id: str):
+    def trigger_job(self, content: dict[str, Any], file_id: str):
+
         file_props = {
             "id": file_id,
             "status": enums.Status.SUCCESS.value,
+            "filesize": 0,
+            "filename": "",
         }
+
         try:
-            dirname = generate_cv(body, self.account)
-            file_props.update({"path": dirname})
+            pdf_blob = generate_pdf(content)
+            if pdf_blob is None:
+                raise ValueError(error.ErrorCode.INTERNAL_SERVER_ERROR)
+            storage = StorageService(
+                username=self.account["username"], bucket=enums.Bucket.RESUME
+            )
+            filename = f"{file_id}.pdf"
+            filesize = len(pdf_blob)
+            storage.save(pdf_blob, filename, filesize, enums.MediaTypeEnum.PDF)
+            file_props.update({"filename": filename, "filesize": filesize})
 
         except Exception as e:
             print(e)
@@ -88,20 +116,3 @@ class ResumeService:
             raise ValueError(error.ErrorCode.BAD_REQUEST)
         content = json.loads(data["content"])
         return {"result": content}
-
-    def list_edits(self, limit: int, index: int):
-        data = ResumeModel(account_id=self.account["id"]).list_cv_records(
-            limit, index
-        )
-
-        def format_record(record: dict):
-            resource_url = File.build_resource_url(
-                path=record["path"],
-                media_type=enums.MediaTypeEnum.PDF,
-                content=enums.ContentDispositionEnum.INLINE,
-            )
-            return {**record, "resource_url": resource_url}
-
-        response = [format_record(record) for record in data]
-
-        return {"result": response}

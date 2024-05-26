@@ -9,14 +9,15 @@ import {
   FormNativeSelect,
   Text,
   cn,
+  useForm,
 } from "@waitingonalice/design-system";
 import { EmploymentEnum } from "@/constants";
 import { toDDMMMYYYY } from "@/utils";
 import { employmentOptions } from "@/utils/options";
-import { BaseCVComponentProps, FormProps } from "../type";
+import type { BaseCVComponentProps, Experience, FormProps } from "../type";
+import { experienceSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
 
-type Experience = FormProps["experiences"][number];
 interface ExperienceDialogProps {
   open: boolean;
   onClose: () => void;
@@ -35,16 +36,29 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
   const [field, setField] = useState(init);
   const [description, setDescription] = useState<string>("");
 
+  const form = useForm({
+    zod: experienceSchema(field),
+    data: field,
+  });
+
   const handleOnClose = () => {
     setField(init);
+    setDescription("");
     onClose();
+    form.clearErrors();
   };
   const handleAddExperience = () => {
+    const success = form.onSubmit();
+    if (!success) return;
     onAdd(field);
     handleOnClose();
   };
 
-  const handleOnChange = <T,>(key: keyof Experience, val: T) => {
+  const handleOnChange = <T extends string | Date | null>(
+    key: keyof Experience,
+    val: T,
+  ) => {
+    form.validate(key, val);
     setField((prev) => ({ ...prev, [key]: val }));
   };
 
@@ -78,6 +92,7 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
       open={open}
       onClose={handleOnClose}
       title="Add Experience"
+      withOverlay
       rightFooterChildren={
         <>
           <Button variant="secondary" onClick={handleOnClose}>
@@ -93,6 +108,8 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           onChange={(val) => handleOnChange("company_name", val)}
           value={field.company_name}
           size="small"
+          showError={Boolean(form.errors.company_name)}
+          errorMessage={form.errors.company_name}
         />
         <FormNativeSelect
           label="Employment"
@@ -101,6 +118,8 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           value={field.employment}
           onChange={(val) => handleOnChange("employment", val)}
           size="small"
+          showError={Boolean(form.errors.employment)}
+          errorMessage={form.errors.employment}
         />
         <FormInput
           label="Role"
@@ -108,18 +127,24 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           value={field.role}
           size="small"
           placeholder="E.g. Software Engineer"
+          showError={Boolean(form.errors.role)}
+          errorMessage={form.errors.role}
         />
         <FormNativeDatePicker
           label="Start"
           onChange={(val) => handleOnChange("start", val)}
           value={field.start}
           placeholder="Select start date"
+          showError={Boolean(form.errors.start)}
+          errorMessage={form.errors.start}
         />
         <FormNativeDatePicker
           label="End"
           placeholder="Select end date"
           onChange={(val) => handleOnChange("end", val)}
           value={field.end}
+          showError={Boolean(form.errors.end)}
+          errorMessage={form.errors.end}
         />
         <Form
           onSubmit={handleAddDescription}
@@ -157,6 +182,8 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
             onChange={handleDescriptionChange}
             value={description}
             size="small"
+            showError={Boolean(form.errors.job_description)}
+            errorMessage={form.errors.job_description}
           />
           <Button className="w-fit" type="submit" size="small">
             Add Description

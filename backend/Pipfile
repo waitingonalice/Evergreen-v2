@@ -15,6 +15,7 @@ pyjwt = "*"
 bcrypt = "*"
 pytz = "*"
 weasyprint = "*"
+minio = "*"
 
 [dev-packages]
 black = "*"

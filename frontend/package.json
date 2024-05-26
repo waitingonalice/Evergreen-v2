@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "@heroicons/react": "^2.0.13",
-    "@waitingonalice/design-system": "^1.2.59",
+    "@waitingonalice/design-system": "^1.2.61",
     "axios": "^1.6.7",
     "clsx": "^2.0.0",
     "js-cookie": "^3.0.5",

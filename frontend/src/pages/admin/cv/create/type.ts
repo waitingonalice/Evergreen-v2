@@ -1,6 +1,6 @@
 import { EmploymentEnum } from "@/constants";
 
-interface Experience {
+export interface Experience {
   company_name: string;
   role: string;
   employment: EmploymentEnum;
@@ -9,12 +9,12 @@ interface Experience {
   job_description: string[];
 }
 
-interface Certifications {
+export interface Certifications {
   title: string;
   description: string;
 }
 
-interface Projects extends Certifications {
+export interface Projects extends Certifications {
   link: string;
   techstack: string[];
 }

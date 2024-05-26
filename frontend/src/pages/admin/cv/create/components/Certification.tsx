@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { Button, Dialog, FormInput, Text } from "@waitingonalice/design-system";
+import {
+  Button,
+  Dialog,
+  FormInput,
+  Text,
+  useForm,
+} from "@waitingonalice/design-system";
 import { BaseCVComponentProps, FormProps } from "../type";
+import { certificationSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
 
 type CertificationType = FormProps["certifications"][number];
@@ -20,12 +27,15 @@ function CertificationDialog({
   onAdd,
 }: CertificationDialogProps) {
   const [field, setField] = useState<CertificationType>(init);
+  const form = useForm({ zod: certificationSchema, data: field });
+
   const handleClose = () => {
     setField(init);
     onClose();
   };
 
   const handleAdd = () => {
+    if (!form.onSubmit()) return;
     onAdd(field);
     setField(init);
     onClose();
@@ -35,6 +45,7 @@ function CertificationDialog({
     key: keyof CertificationType,
     value: string,
   ) => {
+    form.validate(key, value);
     setField((prev) => ({ ...prev, [key]: value }));
   };
   return (
@@ -57,12 +68,16 @@ function CertificationDialog({
           onChange={(val) => handleOnChangeFields("title", val)}
           value={field.title}
           size="small"
+          errorMessage={form.errors.title}
+          showError={!!form.errors.title}
         />
         <FormInput
           onChange={(val) => handleOnChangeFields("description", val)}
           value={field.description}
           as="textarea"
           label="Description"
+          errorMessage={form.errors.description}
+          showError={!!form.errors.description}
         />
       </div>
     </Dialog>

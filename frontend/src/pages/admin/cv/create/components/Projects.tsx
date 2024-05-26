@@ -6,14 +6,15 @@ import {
   Form,
   FormInput,
   Text,
+  useForm,
 } from "@waitingonalice/design-system";
 import { Link } from "@/components";
-import { BaseCVComponentProps, FormProps } from "../type";
+import type { BaseCVComponentProps, FormProps, Projects } from "../type";
+import { projectSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
 
-type ProjectType = FormProps["projects"][number];
 interface ProjectDialogProps {
-  onAdd: (data: ProjectType) => void;
+  onAdd: (data: Projects) => void;
   onClose: () => void;
   open: boolean;
 }
@@ -26,26 +27,35 @@ const init = {
   techstackField: "",
 };
 function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
-  const [field, setField] = useState<ProjectType & { techstackField: string }>(
+  const [field, setField] = useState<Projects & { techstackField: string }>(
     init,
   );
   const [showTechInput, setShowTechInput] = useState(false);
+
+  const form = useForm({
+    zod: projectSchema,
+    data: field,
+  });
 
   const handleOnClose = () => {
     onClose();
     setField(init);
     setShowTechInput(false);
+    form.clearErrors();
   };
 
   const handleAddProject = () => {
+    const success = form.onSubmit();
+    if (!success) return;
     onAdd(field);
     handleOnClose();
   };
 
   const handleOnChange = (
-    key: keyof ProjectType | "techstackField",
+    key: keyof Projects | "techstackField",
     val: string,
   ) => {
+    form.validate(key, val);
     setField((prev) => ({ ...prev, [key]: val }));
   };
 
@@ -72,6 +82,7 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
       open={open}
       onClose={handleOnClose}
       title="Add Project"
+      withOverlay
       rightFooterChildren={
         <>
           <Button variant="secondary" onClick={handleOnClose}>
@@ -88,6 +99,8 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
           value={field.title}
           size="small"
           placeholder="Project Name"
+          showError={!!form.errors.title}
+          errorMessage={form.errors.title}
         />
         <FormInput
           label="Link"
@@ -95,6 +108,8 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
           value={field.link}
           size="small"
           placeholder="https://example.com"
+          showError={!!form.errors.link}
+          errorMessage={form.errors.link}
         />
         <FormInput
           label="Description"
@@ -102,6 +117,8 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
           onChange={(val) => handleOnChange("description", val)}
           value={field.description}
           placeholder="Describe your project"
+          showError={!!form.errors.description}
+          errorMessage={form.errors.description}
         />
         <ul>
           {field.techstack.map((tech, index) => (
@@ -134,7 +151,7 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
           </Form>
         ) : (
           <Button className="w-fit" onClick={handleShowInput} size="small">
-            Add Techstack
+            <PlusIcon className="w-4 h-4" /> Add Techstack
           </Button>
         )}
       </div>
@@ -152,7 +169,7 @@ function Projects({
     setShowDialog((prev) => !prev);
   };
 
-  const handleAddProject = (project: ProjectType) => {
+  const handleAddProject = (project: Projects) => {
     onChange("projects", [...data.projects, project]);
   };
 
