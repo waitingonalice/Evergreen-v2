@@ -1845,10 +1845,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@waitingonalice/design-system@^1.2.61":
-  version "1.2.61"
-  resolved "https://registry.yarnpkg.com/@waitingonalice/design-system/-/design-system-1.2.61.tgz#8699481bfda517723bd7315d74c1c90916646898"
-  integrity sha512-XQf+kjgnKw9VMMiFaUKQ8iZ4fbg7vsHSdWh4q6TcKMObkitq5oYMgrAAU+kudE2CsXqO9xRPTrhiWmpd3k7Cag==
+"@waitingonalice/design-system@^1.2.64":
+  version "1.2.64"
+  resolved "https://registry.yarnpkg.com/@waitingonalice/design-system/-/design-system-1.2.64.tgz#ad1038ea581b98722b3a6b108de226db3b0d8bb9"
+  integrity sha512-c9xwFNsVqU709UfvwAHEKIpcbAgptc/nHXNugGKl1jRJDcFGvwYZwsSvxMrbcZlXx+fzbHCF/zZEYksvHUVYlw==
   dependencies:
     "@radix-ui/react-dialog" "^1.0.5"
     "@radix-ui/react-progress" "^1.0.3"

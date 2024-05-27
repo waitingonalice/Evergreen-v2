@@ -16,5 +16,6 @@ export const useCreateResume = () => {
     return res.data;
   };
 
-  return useMutation(createResume);
+  const { mutateAsync, ...rest } = useMutation(createResume);
+  return [mutateAsync, rest] as const;
 };

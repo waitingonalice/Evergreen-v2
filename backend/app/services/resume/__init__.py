@@ -25,6 +25,33 @@ class ResumeService(AccountModel):
         if self.account is None:
             raise ValueError(error.ErrorCode.UNAUTHORIZED)
 
+    def trigger_job(self, content: dict[str, Any], file_id: str):
+        file_props = {
+            "id": file_id,
+            "status": enums.Status.SUCCESS.value,
+            "filesize": 0,
+            "filename": "",
+        }
+        try:
+            pdf_blob = generate_pdf(content)
+            if pdf_blob is None:
+                raise ValueError(error.ErrorCode.INTERNAL_SERVER_ERROR)
+            storage = StorageService(
+                username=self.account["username"], bucket=enums.Bucket.RESUME
+            )
+            filename = f"{file_id}.pdf"
+            filesize = len(pdf_blob)
+            storage.save(pdf_blob, filename, filesize, enums.MediaTypeEnum.PDF)
+            file_props.update({"filename": filename, "filesize": filesize})
+
+        except Exception as e:
+            print(e)
+            file_props.update({"status": enums.Status.FAILED.value})
+
+        finally:
+            file_record = FileRecordModel(**file_props)
+            transaction(file_record.update_file_record)
+
     # Creates new record in database to store updated values for cv while generates a new cv
     def create_cv(
         self,
@@ -77,35 +104,6 @@ class ResumeService(AccountModel):
             raise HTTPException(
                 status_code=500, detail=error.ErrorCode.INTERNAL_SERVER_ERROR
             )
-
-    def trigger_job(self, content: dict[str, Any], file_id: str):
-
-        file_props = {
-            "id": file_id,
-            "status": enums.Status.SUCCESS.value,
-            "filesize": 0,
-            "filename": "",
-        }
-
-        try:
-            pdf_blob = generate_pdf(content)
-            if pdf_blob is None:
-                raise ValueError(error.ErrorCode.INTERNAL_SERVER_ERROR)
-            storage = StorageService(
-                username=self.account["username"], bucket=enums.Bucket.RESUME
-            )
-            filename = f"{file_id}.pdf"
-            filesize = len(pdf_blob)
-            storage.save(pdf_blob, filename, filesize, enums.MediaTypeEnum.PDF)
-            file_props.update({"filename": filename, "filesize": filesize})
-
-        except Exception as e:
-            print(e)
-            file_props.update({"status": enums.Status.FAILED.value})
-
-        finally:
-            file_record = FileRecordModel(**file_props)
-            transaction(file_record.update_file_record)
 
     @value_error
     def get_record(self, id: int):

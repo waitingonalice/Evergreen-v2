@@ -15,4 +15,5 @@ def generate_pdf(content: dict[str, Any]):
         render_content = template.render(content)
         weasyprint = HTML(string=render_content)
         config = {"uncompress_pdf": True, "jpeg_quality": 95, "zoom": 0.5}
+        file.close()
         return weasyprint.write_pdf(options=config)

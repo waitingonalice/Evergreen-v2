@@ -1,14 +1,11 @@
 import React, { useState } from "react";
-import { XCircleIcon } from "@heroicons/react/16/solid";
 import {
   Button,
   Dialog,
-  Form,
   FormInput,
   FormNativeDatePicker,
   FormNativeSelect,
   Text,
-  cn,
   useForm,
 } from "@waitingonalice/design-system";
 import { EmploymentEnum } from "@/constants";
@@ -30,11 +27,10 @@ const init: Experience = {
   employment: "" as EmploymentEnum,
   start: null,
   end: null,
-  job_description: [],
+  job_description: "",
 };
 function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
   const [field, setField] = useState(init);
-  const [description, setDescription] = useState<string>("");
 
   const form = useForm({
     zod: experienceSchema(field),
@@ -43,7 +39,6 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
 
   const handleOnClose = () => {
     setField(init);
-    setDescription("");
     onClose();
     form.clearErrors();
   };
@@ -60,31 +55,6 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
   ) => {
     form.validate(key, val);
     setField((prev) => ({ ...prev, [key]: val }));
-  };
-
-  const handleRemoveDescription = (index: number) => {
-    setField((prev) => {
-      const updateDesc = [...prev.job_description];
-      updateDesc.splice(index, 1);
-      return {
-        ...prev,
-        job_description: updateDesc,
-      };
-    });
-  };
-
-  const handleAddDescription = () => {
-    setField((prev) => {
-      setDescription("");
-      return {
-        ...prev,
-        job_description: [...prev.job_description, description],
-      };
-    });
-  };
-
-  const handleDescriptionChange = (val: string) => {
-    setDescription(val);
   };
 
   return (
@@ -146,49 +116,15 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           showError={Boolean(form.errors.end)}
           errorMessage={form.errors.end}
         />
-        <Form
-          onSubmit={handleAddDescription}
-          className={cn(
-            "flex flex-col gap-y-4",
-            field.job_description.length > 0 && "mt-4",
-          )}
-        >
-          {field.job_description.length > 0 && (
-            <ul className="flex flex-col gap-y-4 p-4 border rounded-md">
-              {field.job_description.map((desc, index, arr) => (
-                <li
-                  key={desc}
-                  className={cn(
-                    "flex gap-x-4 justify-between",
-                    arr.length > 1 && " border-b pb-4",
-                  )}
-                >
-                  <Text type="caption">{desc}</Text>
-                  <Button
-                    size="small"
-                    variant="errorLink"
-                    onClick={() => handleRemoveDescription(index)}
-                  >
-                    <XCircleIcon className="w-4 h-4 flex-shrink-0" />
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <FormInput
-            label="Description"
-            as="textarea"
-            onChange={handleDescriptionChange}
-            value={description}
-            size="small"
-            showError={Boolean(form.errors.job_description)}
-            errorMessage={form.errors.job_description}
-          />
-          <Button className="w-fit" type="submit" size="small">
-            Add Description
-          </Button>
-        </Form>
+        <FormInput
+          label="Description"
+          as="textarea"
+          onChange={(val) => handleOnChange("job_description", val)}
+          value={field.job_description}
+          size="small"
+          showError={Boolean(form.errors.job_description)}
+          errorMessage={form.errors.job_description}
+        />
       </div>
     </Dialog>
   );
@@ -237,13 +173,9 @@ export function Experience({
             )}
           </div>
           <Text type="body">{exp.role}</Text>
-          <ul className="flex flex-col gap-y-2 mx-4 mt-2 list-disc">
-            {exp.job_description.map((desc) => (
-              <li key={desc}>
-                <Text type="caption">{desc}</Text>
-              </li>
-            ))}
-          </ul>
+          <Text className="whitespace-pre-line" type="caption">
+            {exp.job_description}
+          </Text>
           <Button
             className="ml-auto"
             size="small"

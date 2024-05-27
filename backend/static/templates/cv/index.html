@@ -52,31 +52,18 @@
 
       h3 {
         color: #111;
-        font-size: 1.25rem;
+        font-size: 1rem;
         margin-top: 0rem;
         margin: 0;
         font-weight: normal;
       }
 
-      h3 span.dept::before {
-        content: "";
-        border-left: 1px solid #ccc;
-        padding-left: 0.4rem;
-      }
-
-      h3 span.dept {
-        color: #aaa;
-      }
-
       h4 {
+        color: gray;
         margin: 0;
         font-weight: normal;
-      }
-
-      h3 span.duration {
-        color: #888;
-        display: block;
-        float: right;
+        font-size: 0.8rem;
+        display: inline-block;
       }
 
       time {
@@ -85,9 +72,10 @@
       }
 
       p {
-        font-size: 1rem;
-        margin-top: 0.5rem;
-        margin-bottom: 0;
+        margin: 0;
+        font-weight: normal;
+        font-size: 0.8rem;
+        display: inline-block;
       }
 
       li {
@@ -111,10 +99,7 @@
 
       #experience {
         position: relative;
-      }
 
-      #experience ul {
-        max-width: 80%;
       }
 
       #educationAndCert {
@@ -138,12 +123,6 @@
 
       .title{
         font-weight: 700;
-      }
-
-      #phone {
-        font-size: 1.25rem;
-        font-weight: bold;
-        text-decoration: none !important;
       }
 
       #location {
@@ -299,18 +278,18 @@
           <h2>Skills</h2>
           <div>
             <div>
-              <h4 class="title-left">Languages</h4>
+              <p class="title-left">Languages</p>
               -
-              {% for language in languages %}
-              <span>{{ language }}</span>
-              {% endfor %}
+                {% for language in languages %}
+                  <p>{{ language }}</p>
+                {% endfor %}
             </div>
             <div>
-              <h4 class="title-left">Frameworks & Technologies</h4>
+              <p class="title-left">Frameworks & Technologies</p>
               -
-              {% for tech in techstack %}
-              <span>{{ tech }}</span>
-              {% endfor %}
+                {% for tech in techstack %}
+                  <p>{{ tech }}</p>
+                {% endfor %}
             </div>
           </div>
         </section>
@@ -323,23 +302,25 @@
         >
           <h2>Experience</h2>
           {% for experience in experiences %}
-            <h3>
-              <span itemprop="name">{{ experience["company_name"] }}</span>
-              <span class="dept" itemprop="department"
-                >{{ experience["role"] }}</span
-              >
-              <span class="duration">
-                <time itemprop="startDate">{{ experience["start"] }}</time>
+            <div style="display: flex; justify-content: space-between;">
+              <h3>{{ experience["company_name"] }}</h3>
+              <span>
+                <time>{{ experience["start"] }}</time>
                 -
-                <time itemprop="endDate">{{ experience["end"] }}</time>
+                <time>{{ experience["end"] }}</time>
               </span>
-            </h3>
-            <h4>{{ experience["employment"] }}</h4>
-            <ul>
-              {% for description in experience["job_description"] %}
-              <li>{{ description }}</li>
-              {% endfor %}
-            </ul>
+            </div>
+            <div>
+              <h4>{{ experience["role"] }}</h4>
+            </div>
+            <div style="margin-bottom: 4px 0;">
+              <h4>{{ experience["employment"] }}</h4>
+            </div>
+            <p style="white-space: pre-line;">
+              {{ experience["job_description"] }}
+            </p>
+            <br />
+            <br />
           {% endfor %}
         </section>
 
@@ -347,16 +328,13 @@
           <h2>Education and Certifications</h2>
           <ul
             id="educationAndCert"
-            itemprop="alumniOf"
-            itemscope=""
-            itemtype="http://schema.org/EducationalOrganization"
           >
             {% for cert in certifications %}
             <li>
-              <div class="title">
-                {{ cert["title"] }}
-              </div>
-              {{ cert["description"] }}
+              <h3>{{ cert["title"] }}</h3>
+              <p>
+                {{ cert["description"] }}
+              </p>
             </li>
             {% endfor %}
           </ul>
@@ -378,12 +356,14 @@
                       {{ project["title"] }}
                     </a>
                   </div>
-                  {{ project["description"] }}
-                  {% for tech in project["techstack"] %}
+                  <p>
+                    {{ project["description"] }}
+                  </p>
                   <div>
-                    <small class="techstack">{{ tech }}</small>
+                    {% for tech in project["techstack"] %}
+                      <p class="techstack">{{ tech }}</p>
+                    {% endfor %}
                   </div>
-                  {% endfor %}
                 </li>
               {% endfor %}
             </ul>

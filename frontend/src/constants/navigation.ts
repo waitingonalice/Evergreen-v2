@@ -1,9 +1,5 @@
-import {
-  BanknotesIcon,
-  ChartBarSquareIcon,
-  HomeIcon,
-  NewspaperIcon,
-} from "@heroicons/react/16/solid";
+import { List } from "lucide-react";
+import { HomeIcon, NewspaperIcon } from "@heroicons/react/16/solid";
 import { clientRoutes } from "./routes";
 
 export const navigation = [
@@ -13,18 +9,18 @@ export const navigation = [
     Icon: HomeIcon,
   },
   {
+    name: "Records",
+    href: "/",
+    Icon: List,
+  },
+  {
     name: "CV",
     href: clientRoutes.admin.cv.index,
     Icon: NewspaperIcon,
   },
-  {
-    name: "Expenses",
-    href: "/",
-    Icon: BanknotesIcon,
-  },
-  {
-    name: "Analytics",
-    href: "/",
-    Icon: ChartBarSquareIcon,
-  },
+  // {
+  //   name: "Analytics",
+  //   href: "/",
+  //   Icon: ChartBarSquareIcon,
+  // },
 ];

@@ -1,8 +1,8 @@
 import React from "react";
-import { CV } from "@/pages/admin/cv/records";
+import { CreateCV } from "@/pages/admin/cv/create";
 
 function CVPage() {
-  return <CV />;
+  return <CreateCV />;
 }
 
 export default CVPage;

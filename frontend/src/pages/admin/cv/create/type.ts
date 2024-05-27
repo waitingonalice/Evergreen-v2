@@ -6,7 +6,7 @@ export interface Experience {
   employment: EmploymentEnum;
   start: Date | null;
   end: Date | null;
-  job_description: string[];
+  job_description: string;
 }
 
 export interface Certifications {

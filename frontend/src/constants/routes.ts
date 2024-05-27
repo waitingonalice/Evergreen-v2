@@ -8,6 +8,7 @@ export const clientRoutes = {
       index: "/admin/cv",
       create: "/admin/cv/create",
     },
+    records: "/admin/records",
   },
   auth: {
     login: "/login",
@@ -17,7 +18,6 @@ export const clientRoutes = {
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
   },
-  profile: { index: "/profile" },
   dashboard: "/",
 };
 

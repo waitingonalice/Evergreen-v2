@@ -16,6 +16,8 @@ class StorageService(Minio):
             endpoint=Env.MINIO_URL,
             access_key=Env.MINIO_ACCESS_KEY,
             secret_key=Env.MINIO_SECRET_KEY,
+            secure=True,
+            cert_check=True,
         )
 
         self.root = "evergreen"
