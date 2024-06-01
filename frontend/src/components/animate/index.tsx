@@ -1,5 +1,5 @@
 import React from "react";
-import { useDelayUnmount } from "@/hooks";
+import { useDelayUnmount } from "@waitingonalice/design-system/hooks/delay-unmount";
 
 export interface AnimateProps {
   show: boolean;
