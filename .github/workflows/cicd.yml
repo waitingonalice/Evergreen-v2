@@ -45,5 +45,5 @@ jobs:
       - name: Install dependencies and run linters
         run: |
           cd frontend
-          yarn install --frozen-lockfile
+          yarn install
           yarn lint

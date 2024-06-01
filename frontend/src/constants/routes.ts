@@ -3,7 +3,12 @@ const endpointV1 = `${endpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
   admin: {
-    dashboard: "/admin",
+    dashboard: "/admin/dashboard",
+    cv: {
+      index: "/admin/cv",
+      edit: (id: string) => `/admin/cv/${id}`,
+    },
+    records: "/admin/records",
   },
   auth: {
     login: "/login",
@@ -13,7 +18,6 @@ export const clientRoutes = {
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
   },
-  profile: { index: "/profile" },
   dashboard: "/",
 };
 
@@ -30,6 +34,15 @@ export const apiRoutes = {
       resetPassword: `${endpointV1}/auth/reset-password`,
       resendEmail: `${endpointV1}/auth/confirmation-email`,
       refreshToken: `${endpointV1}/auth/refresh-token`,
+    },
+    cv: {
+      create: `${endpointV1}/cv/create`,
+      get: (id: string) => `${endpointV1}/cv/${id}`,
+    },
+    records: {
+      list: `${endpointV1}/records`,
+      download: (bucket: string, filename: string) =>
+        `${endpointV1}/records/download/${bucket}/${filename}`,
     },
   },
 };

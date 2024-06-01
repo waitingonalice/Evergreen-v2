@@ -2,23 +2,21 @@ version: "3.8"
 name: evergreen
 
 services:
-  frontend:
-    container_name: frontend
-    restart: always
-    ports:
-      - "3000:3000"
-    depends_on:
-      - backend
-
   backend:
+    build:
+      context: ./backend
+      target: dev
     container_name: backend
+    command: pipenv run start
     restart: always
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
     depends_on:
-      - database
+      - database-dev
 
-  database:
+  database-dev:
     image: postgres:15
     restart: always
     env_file:
@@ -26,7 +24,7 @@ services:
     ports:
       - "6543:5432"
     volumes:
-      - ./data/prod:/var/lib/postgresql/data
+      - ./data/dev:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
@@ -39,7 +37,7 @@ services:
     volumes:
       - pgadmin:/var/lib/pgadmin
     depends_on:
-      - database
+      - database-dev
 
 volumes:
   pgadmin:

@@ -3,26 +3,32 @@ import { Topbar } from "./Topbar";
 
 interface LayoutProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-function Layout({ children }: LayoutProps) {
-  return (
-    <div>
-      <Topbar />
-      <>{children}</>
-    </div>
-  );
+function Layout({ children, className }: LayoutProps) {
+  return <main className={className}>{children}</main>;
 }
 
 interface ContentProps {
   className?: string;
+  children: React.ReactNode;
 }
-function Content({ children, className }: LayoutProps & ContentProps) {
+function Content({ children, className }: ContentProps) {
   return (
-    <main className={cn("p-4 h-fit", "md:p-8", className)}>{children}</main>
+    <div
+      className={cn(
+        "p-4 mt-8  flex justify-center flex-col items-center",
+        "md:p-8",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }
 
 Layout.Content = Content;
+Layout.Header = Topbar;
 
 export { Layout as AdminLayout };

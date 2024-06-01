@@ -26,12 +26,15 @@ def decode_token(token: str) -> dict:
     return jwt.decode(token, key, algorithms=["HS256"])
 
 
-def generate_auth_token(email: str, active: bool, role: str, country: str):
+def generate_auth_token(
+    id: str, email: str, active: bool, role: str, country: str
+):
     expiry = datetime.datetime.now(
         tz=datetime.timezone.utc
     ) + datetime.timedelta(hours=1)
     return encode_token(
         {
+            "id": id,
             "email": email,
             "active": active,
             "country": country,

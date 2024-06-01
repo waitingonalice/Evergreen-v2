@@ -11,6 +11,7 @@ export interface LinkProps
   to: string;
   textSize?: "small" | "medium" | "large";
   prefixIcon?: React.ReactNode;
+  onClick?: () => void;
 }
 
 const LinkComponent = ({
@@ -21,7 +22,12 @@ const LinkComponent = ({
   prefixIcon,
   size,
   textSize = "small",
+  onClick,
 }: LinkProps) => {
+  const handleOnClickLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation();
+    onClick?.();
+  };
   const baseStyle =
     "hover:cursor-pointer whitespace-nowrap transition-all duration-100 disabled:cursor-not-allowed disabled:opacity-30 text-[14px] font-medium tracking-[0.0125em] flex justify-center items-center gap-x-4";
 
@@ -36,13 +42,14 @@ const LinkComponent = ({
       baseStyleButton,
     ),
     secondary: cn(
-      "shadow-secondary-1/40 bg-secondary-1 text-primary-main hover:bg-gray-2 active:bg-gray-3 active:ring-primary-light",
+      "shadow-secondary-1/40 bg-secondary-1 text-primary-main active:ring-primary-light hover:bg-secondary-2",
       baseStyleButton,
     ),
     error: cn(
       "shadow-error-main/40 bg-error-dark text-secondary-1 hover:bg-error-dark/90 active:bg-error-main active:ring-error-main",
       baseStyleButton,
     ),
+
     primaryLink:
       "hover:text-primary-dark text-primary-main active:text-primary-dark",
 
@@ -57,6 +64,7 @@ const LinkComponent = ({
 
   return (
     <Link
+      onClick={handleOnClickLink}
       href={to}
       className={cn(baseStyle, variantMapper[variant], className)}
     >

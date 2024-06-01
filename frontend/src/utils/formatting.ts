@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import isNil from "lodash/isNil";
 
 export const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
@@ -121,3 +122,6 @@ export const getDomain = (hostname: string) =>
   hostname.split(".").reverse().slice(0, 2).reverse().join(".");
 
 export const nowInUnixSeconds = () => Math.round(Date.now()) / 1000;
+
+export const toDDMMMYYYY = (date: Date | string) =>
+  dayjs(date).format("DD MMM YYYY");

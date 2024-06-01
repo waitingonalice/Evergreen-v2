@@ -27,7 +27,7 @@ const appNavigation = [
   },
   {
     name: "Portfolio",
-    href: "https://github.com/waitingonalice/Portfolio-Website",
+    href: "https://wilson-sie.dev/",
     Icon: AcademicCapIcon,
   },
   {
@@ -39,10 +39,15 @@ const appNavigation = [
 function AdminDashboard() {
   return (
     <AdminLayout>
+      <AdminLayout.Header />
       <AdminLayout.Content>
         <Grid
           title="Applications"
-          className={cn("grid grid-cols-3 gap-6 md:gap-8", "md:grid-cols-4")}
+          className={cn(
+            "grid grid-cols-3 gap-6 md:gap-8",
+            "md:grid-cols-4",
+            "lg:grid-cols-5",
+          )}
         >
           {appNavigation.map((item) => (
             <Link

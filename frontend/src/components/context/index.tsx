@@ -1,7 +1,11 @@
 import { createContext, useContext, useMemo, useState } from "react";
-import { CustomProps } from "pages/_app";
 import { UserResponse } from "@/utils/auth";
 
+export interface CustomProps {
+  customProps: {
+    user: UserResponse["result"];
+  };
+}
 interface AppContextProps {
   user?: UserResponse["result"];
   setUser: (user: UserResponse["result"]) => void;

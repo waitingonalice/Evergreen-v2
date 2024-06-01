@@ -48,6 +48,7 @@ class AuthService:
                 status_code=400, detail=ErrorCode.ACCOUNT_UNVERIFIED
             )
         auth_token = {
+            "id": str(account_details["id"]),
             "email": account_details["email"],
             "active": account_details["is_active"],
             "country": account_details["country"],
@@ -165,6 +166,7 @@ class AuthService:
             )
 
         auth_token = {
+            "id": str(account_details["id"]),
             "email": account_details["email"],
             "active": account_details["is_active"],
             "country": account_details["country"],

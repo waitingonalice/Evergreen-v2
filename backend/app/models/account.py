@@ -60,14 +60,12 @@ class AccountModel:
         FROM "Account"
         WHERE id = :id OR
         email = :email OR
-        username = :username OR
-        password = :password
+        username = :username
         """
         params = {
             "id": id,
             "email": self.email,
             "username": self.username,
-            "password": self.password,
         }
         result = query(query_statement, params).mappings().first()
         return result

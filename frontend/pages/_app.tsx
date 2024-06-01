@@ -2,16 +2,10 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ToastProvider, cn } from "@waitingonalice/design-system/";
-import { AppProvider } from "@/components/context";
+import { AppProvider, CustomProps } from "@/components/context";
 import "@/styles/globals.css";
 import { isBrowser } from "@/utils";
-import { UserResponse, getUser } from "@/utils/auth";
-
-export interface CustomProps {
-  customProps: {
-    user: UserResponse["result"];
-  };
-}
+import { getUser } from "@/utils/auth";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -29,14 +23,11 @@ export default function App({
   customProps,
 }: AppContext & AppProps & CustomProps) {
   const isMobilePhone = isBrowser() && window.screen.width < 768;
-  const isTablet = isBrowser() && window.screen.width < 1280;
   const renderViewport = () => {
     if (isMobilePhone) {
-      return "initial-scale=0.6";
+      return "initial-scale=0.9";
     }
-    if (isTablet) {
-      return "initial-scale=0.7";
-    }
+
     return "initial-scale=1.0";
   };
 
@@ -73,9 +64,13 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     router,
   };
   const user = await getUser(ctx);
-  if (!user?.data.result) return props;
-  const { result } = user.data;
+  if (!user?.data.result) {
+    return props;
+  }
 
+  const { result } = user.data;
+  // eslint-disable-next-line no-console
+  console.info(result);
   return {
     ...props,
     customProps: {

@@ -11,7 +11,9 @@ def value_error(func: Callable) -> Callable:
         try:
             return func(*args, **kwargs)
         except ValueError as e:
-            raise HTTPException(status_code=400, detail=int(str(e)))
+            error_code = int(str(e))
+            status_code = error_code[:3]
+            raise HTTPException(status_code=status_code, detail=error_code)
         except Exception as e:
             print(repr(e))
             raise HTTPException(

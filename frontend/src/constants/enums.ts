@@ -253,3 +253,21 @@ export enum RoleEnum {
   ADMIN = "ADMIN",
   USER = "USER",
 }
+
+export enum EmploymentEnum {
+  "Full-time" = "Full-time",
+  "Part-time" = "Part-time",
+  "Contract" = "Contract",
+  "Internship" = "Internship",
+  "Freelance" = "Freelance",
+}
+
+export enum StatusEnum {
+  Pending = "PENDING",
+  Success = "SUCCESS",
+  Failed = "FAILED",
+}
+
+export enum BucketTypeEnum {
+  Resume = "resume",
+}
