@@ -2,7 +2,7 @@ from typing import Annotated, Optional
 
 from pydantic import BaseModel, Field
 
-from ...constants.enums import ContentDispositionEnum, MediaTypeEnum
+from ...constants.enums import ContentDispositionEnum, ContentTypeEnum
 
 
 class FileParamFields(BaseModel):
@@ -14,7 +14,7 @@ class FileParamFields(BaseModel):
     ] = None
 
     content_type: Annotated[
-        Optional[MediaTypeEnum], Field(description="Content-Type header")
+        Optional[ContentTypeEnum], Field(description="Content-Type header")
     ] = None
 
     filename: Annotated[

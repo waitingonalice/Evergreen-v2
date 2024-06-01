@@ -20,7 +20,7 @@ class Status(Enum):
     FAILED = "FAILED"
 
 
-class MediaTypeEnum(Enum):
+class ContentTypeEnum(Enum):
     PDF = "application/pdf"
     CSV = "text/csv"
     XLSX = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

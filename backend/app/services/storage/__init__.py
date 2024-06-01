@@ -3,7 +3,7 @@ from datetime import timedelta
 
 from minio import Minio
 
-from ...constants.enums import Bucket, ContentDispositionEnum, MediaTypeEnum
+from ...constants.enums import Bucket, ContentDispositionEnum, ContentTypeEnum
 from ...utils.environment import Env
 
 
@@ -30,7 +30,7 @@ class StorageService(Minio):
         file: bytes | str,
         filename: str,
         filesize: int,
-        content_type: MediaTypeEnum | None = None,
+        content_type: ContentTypeEnum = ContentTypeEnum.OCTET_STREAM,
     ):
         try:
             binary_data = io.BytesIO(
@@ -42,7 +42,7 @@ class StorageService(Minio):
                 object_name=path,
                 data=binary_data,
                 length=filesize,
-                content_type=content_type.value if content_type else None,
+                content_type=content_type.value,
             )
         except Exception as e:
             print(e)
@@ -55,7 +55,7 @@ class StorageService(Minio):
         )
         data = response.read()
         response.close()
-        response = response.release_conn()
+        response.release_conn()
         return data
 
     def generate_presigned_url(

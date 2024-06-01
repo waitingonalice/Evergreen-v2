@@ -25,7 +25,7 @@ class ResumeService(AccountModel):
             self.account = self.get_account()
 
     def trigger_job(self, content: dict[str, Any], file_id: str):
-        file_props = {
+        file_props: dict = {
             "id": file_id,
             "status": enums.Status.SUCCESS,
             "filesize": 0,
@@ -40,7 +40,9 @@ class ResumeService(AccountModel):
             )
             filename = f"{file_id}.pdf"
             filesize = len(pdf_blob)
-            storage.save(pdf_blob, filename, filesize, enums.MediaTypeEnum.PDF)
+            storage.save(
+                pdf_blob, filename, filesize, enums.ContentTypeEnum.PDF
+            )
             file_props.update({"filename": filename, "filesize": filesize})
 
         except Exception as e:
@@ -106,7 +108,7 @@ class ResumeService(AccountModel):
             )
 
     @value_error
-    def get_cv(self, file_record_id: int):
+    def get_cv(self, file_record_id: str):
         data = ResumeModel(file_record_id=file_record_id).get_cv_record()
         if data is None:
             raise ValueError(error.ErrorCode.BAD_REQUEST)
