@@ -18,17 +18,16 @@ from .utils import generate_pdf
 
 
 class ResumeService(AccountModel):
-    @value_error
-    def __init__(self, user: dict):
-        super().__init__(email=user["email"])
-        self.account = self.get_account()
-        if self.account is None:
-            raise ValueError(error.ErrorCode.UNAUTHORIZED)
+    # TODO: update this to use redis cache to fetch user data
+    def __init__(self, user: dict | None = None):
+        if user:
+            super().__init__(email=user["email"])
+            self.account = self.get_account()
 
     def trigger_job(self, content: dict[str, Any], file_id: str):
         file_props = {
             "id": file_id,
-            "status": enums.Status.SUCCESS.value,
+            "status": enums.Status.SUCCESS,
             "filesize": 0,
             "filename": "",
         }
@@ -46,7 +45,7 @@ class ResumeService(AccountModel):
 
         except Exception as e:
             print(e)
-            file_props.update({"status": enums.Status.FAILED.value})
+            file_props.update({"status": enums.Status.FAILED})
 
         finally:
             file_record = FileRecordModel(**file_props)
@@ -61,9 +60,10 @@ class ResumeService(AccountModel):
         try:
             uuid = str(uuid4())
             file_record = FileRecordModel(
-                status=enums.Status.PENDING.value,
+                status=enums.Status.PENDING,
                 account_id=self.account["id"],
                 id=uuid,
+                type=enums.Bucket.RESUME,
             )
             resume = ResumeModel(file_record_id=uuid)
 
@@ -106,10 +106,8 @@ class ResumeService(AccountModel):
             )
 
     @value_error
-    def get_record(self, id: int):
-        data = ResumeModel(
-            id=id, account_id=self.account["id"]
-        ).get_cv_record()
+    def get_cv(self, file_record_id: int):
+        data = ResumeModel(file_record_id=file_record_id).get_cv_record()
         if data is None:
             raise ValueError(error.ErrorCode.BAD_REQUEST)
         content = json.loads(data["content"])

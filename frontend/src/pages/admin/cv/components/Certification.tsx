@@ -111,14 +111,13 @@ function Certification({
         onAdd={handleAddCertification}
       />
       {data.certifications.length > 0 && (
-        <ul className="mb-4 flex flex-col gap-y-4 mx-4">
+        <ul className="mb-4 flex flex-col gap-y-4">
           {data.certifications.map((cert, index) => (
-            <li
-              key={cert.title}
-              className="list-disc border-b border-b-gray-2 pb-4"
-            >
-              <Text type="body">{cert.title}</Text>
-              <Text type="caption">{cert.description}</Text>
+            <li key={cert.title} className="border-b border-b-gray-2 pb-4">
+              <Text type="body-bold">{cert.title}</Text>
+              <Text className="my-2" type="caption">
+                {cert.description}
+              </Text>
               <Button
                 className="ml-auto"
                 variant="errorLink"

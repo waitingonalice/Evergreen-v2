@@ -1,17 +1,13 @@
 import { cn } from "@waitingonalice/design-system/utils/cn";
-import { Topbar, TopbarProps } from "./Topbar";
+import { Topbar } from "./Topbar";
 
-interface LayoutProps extends TopbarProps {
+interface LayoutProps {
   children: React.ReactNode;
+  className?: string;
 }
 
-function Layout({ children, onBackClick, ctxButtons }: LayoutProps) {
-  return (
-    <>
-      <Topbar onBackClick={onBackClick} ctxButtons={ctxButtons} />
-      {children}
-    </>
-  );
+function Layout({ children, className }: LayoutProps) {
+  return <main className={className}>{children}</main>;
 }
 
 interface ContentProps {
@@ -20,7 +16,7 @@ interface ContentProps {
 }
 function Content({ children, className }: ContentProps) {
   return (
-    <main
+    <div
       className={cn(
         "p-4 mt-8  flex justify-center flex-col items-center",
         "md:p-8",
@@ -28,7 +24,7 @@ function Content({ children, className }: ContentProps) {
       )}
     >
       {children}
-    </main>
+    </div>
   );
 }
 

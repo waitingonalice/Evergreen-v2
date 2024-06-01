@@ -37,9 +37,10 @@ class Account(Base):
 class FileRecord(Base):
     __tablename__ = "FileRecord"
     id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()))
-    filename = Column(String)
+    filename = Column(String, index=True)
     filesize = Column(Integer)
-    status = Column(String)
+    status = Column(String, index=True)
+    type = Column(String, index=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     account_id = Column(
         UUID(as_uuid=True),

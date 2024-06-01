@@ -7,7 +7,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { jwtDecode } from "jwt-decode";
-import { GetServerSidePropsContext, NextPageContext } from "next";
+import { NextPageContext } from "next";
 import Router from "next/router";
 import { RoleEnum, apiRoutes, clientRoutes } from "@/constants";
 import {
@@ -19,7 +19,7 @@ import {
 import { getCookie } from "./cookies";
 import { nowInUnixSeconds } from "./formatting";
 
-export type NextSSRType = GetServerSidePropsContext | NextPageContext;
+export type NextSSRType = NextPageContext;
 
 interface AuthToken {
   exp: number;
@@ -32,10 +32,9 @@ interface AuthToken {
 class AxiosFactory {
   private axios: AxiosInstance;
 
-  redirectPath: (path: string) => void;
-
   constructor(ctx?: NextSSRType) {
     const authRoutes = Object.values(apiRoutes.v1.auth);
+    const isLoginPage = ctx?.pathname?.includes(clientRoutes.auth.login);
 
     const redirect = (path: string) => {
       if (ctx?.res) {
@@ -55,7 +54,7 @@ class AxiosFactory {
         config.signal = controller.signal;
         controller.abort();
         removeCookieTokens(ctx);
-        redirect(`${clientRoutes.auth.login}?expired=true`);
+        if (!isLoginPage) redirect(`${clientRoutes.auth.login}?expired=true`);
         return config;
       }
 
@@ -75,7 +74,7 @@ class AxiosFactory {
     async function responseMiddleware(error: AxiosError) {
       if (error.response?.status === 401) {
         removeCookieTokens(ctx);
-        redirect(`${clientRoutes.auth.login}?expired=true`);
+        if (!isLoginPage) redirect(`${clientRoutes.auth.login}?expired=true`);
       }
       return Promise.reject(error);
     }
@@ -93,16 +92,11 @@ class AxiosFactory {
       responseMiddleware,
     );
 
-    this.redirectPath = redirect;
     this.axios = axiosClient;
   }
 
   get client() {
     return this.axios;
-  }
-
-  redirect(path: string) {
-    this.redirectPath(path);
   }
 }
 

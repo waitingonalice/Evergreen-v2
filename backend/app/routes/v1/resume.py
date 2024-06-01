@@ -9,9 +9,9 @@ router = APIRouter(
 )
 
 
-@router.get("/{id}")
-def get_record(id: int, user: verify_token_deps):
-    return ResumeService(user).get_record(id)
+@router.get("/{file_record_id}")
+def get_record(file_record_id: str):
+    return ResumeService().get_cv(file_record_id)
 
 
 @router.post("/create")

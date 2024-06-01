@@ -10,8 +10,7 @@ from .main import engine
 def query(query_str: str, params=None):
     with engine.connect() as conn:
         try:
-            result = conn.execute(text(query_str), params)
-            return result
+            return conn.execute(text(query_str), params)
         except SQLAlchemyError as e:
             print(f"Error executing query: {str(e)}")
             raise e

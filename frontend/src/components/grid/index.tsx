@@ -16,13 +16,7 @@ function Grid({ title, children, className, callToAction }: GridProps) {
         </Text>
         {callToAction}
       </div>
-      <div
-        className={cn(
-          "md:p-8",
-          "p-4 bg-secondary-1 w-full rounded-lg",
-          className,
-        )}
-      >
+      <div className={cn("p-4 bg-secondary-1 w-full rounded-lg", className)}>
         {children}
       </div>
     </div>

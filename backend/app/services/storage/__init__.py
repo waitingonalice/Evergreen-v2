@@ -1,8 +1,9 @@
 import io
+from datetime import timedelta
 
 from minio import Minio
 
-from ...constants.enums import Bucket, MediaTypeEnum
+from ...constants.enums import Bucket, ContentDispositionEnum, MediaTypeEnum
 from ...utils.environment import Env
 
 
@@ -47,8 +48,35 @@ class StorageService(Minio):
             print(e)
             raise
 
-    # def get(self, key: str):
-    #     return self.storage.get(key)
+    def get(self, filename: str):
+        object_name = f"{self.username}/{self.bucket}/{filename}"
+        response = self.get_object(
+            bucket_name=self.root, object_name=object_name
+        )
+        data = response.read()
+        response.close()
+        response = response.release_conn()
+        return data
 
-    # def delete(self, key: str):
-    #     return self.storage.delete(key)
+    def generate_presigned_url(
+        self,
+        filename: str,
+        expiry: int = 1,
+        content_disposition: ContentDispositionEnum = ContentDispositionEnum.ATTACHMENT,
+        download_name: str | None = None,
+    ):
+        """
+        Get presigned url for download.
+        :param filename: name of the file to download
+        :param expiry: time in days for the url to expire
+        """
+        object_name = f"{self.username}/{self.bucket}/{filename}"
+
+        return self.presigned_get_object(
+            bucket_name=self.root,
+            object_name=object_name,
+            expires=(timedelta(expiry)),
+            response_headers={
+                "response-content-disposition": f"{content_disposition.value}; filename={download_name or filename}"
+            },
+        )

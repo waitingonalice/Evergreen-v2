@@ -39,6 +39,7 @@ const appNavigation = [
 function AdminDashboard() {
   return (
     <AdminLayout>
+      <AdminLayout.Header />
       <AdminLayout.Content>
         <Grid
           title="Applications"

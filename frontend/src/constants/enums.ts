@@ -261,3 +261,13 @@ export enum EmploymentEnum {
   "Internship" = "Internship",
   "Freelance" = "Freelance",
 }
+
+export enum StatusEnum {
+  Pending = "PENDING",
+  Success = "SUCCESS",
+  Failed = "FAILED",
+}
+
+export enum BucketTypeEnum {
+  Resume = "resume",
+}

@@ -6,7 +6,7 @@ export const clientRoutes = {
     dashboard: "/admin/dashboard",
     cv: {
       index: "/admin/cv",
-      create: "/admin/cv/create",
+      edit: (id: string) => `/admin/cv/${id}`,
     },
     records: "/admin/records",
   },
@@ -38,6 +38,11 @@ export const apiRoutes = {
     cv: {
       create: `${endpointV1}/cv/create`,
       get: (id: string) => `${endpointV1}/cv/${id}`,
+    },
+    records: {
+      list: `${endpointV1}/records`,
+      download: (bucket: string, filename: string) =>
+        `${endpointV1}/records/download/${bucket}/${filename}`,
     },
   },
 };

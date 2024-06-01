@@ -3,7 +3,7 @@ import axios from "axios";
 import { NextPageContext } from "next";
 import { RoleEnum, apiRoutes } from "@/constants";
 import { AxiosFactory, NextSSRType } from "./axios";
-import { getCookie, removeCookie, setCookie } from "./cookies";
+import { removeCookie, setCookie } from "./cookies";
 import { isBrowser } from "./environment";
 
 export interface UserResponse {
@@ -23,11 +23,9 @@ interface RefreshTokenResponseType {
 export const AUTH_KEY = "token";
 export const REFRESH_KEY = "refresh-token";
 export const getUser = async (ctx?: NextPageContext) => {
-  const token = getCookie(AUTH_KEY, ctx);
-  if (!token) return null;
-  const axios = new AxiosFactory(ctx);
+  const { client } = new AxiosFactory(ctx);
   try {
-    const data = await axios.client.get<UserResponse>(apiRoutes.v1.account.me);
+    const data = await client.get<UserResponse>(apiRoutes.v1.account.me);
     return data;
   } catch (error) {
     console.error(error);

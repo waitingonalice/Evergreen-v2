@@ -36,7 +36,7 @@ function CreateCV({ isEdit = false }: CVProps) {
   const [createCv, createCVOptions] = useCreateResume();
 
   const handleBackClick = () => {
-    router.push(clientRoutes.admin.cv.index);
+    router.back();
   };
 
   const handleOnChange = <T,>(key: keyof FormProps, val: T) => {
@@ -109,7 +109,11 @@ function CreateCV({ isEdit = false }: CVProps) {
   ];
 
   return (
-    <AdminLayout onBackClick={handleBackClick} ctxButtons={buttonProps}>
+    <AdminLayout>
+      <AdminLayout.Header
+        onBackClick={handleBackClick}
+        ctxButtons={buttonProps}
+      />
       <AdminLayout.Content className="gap-y-8">
         <Grid title="Skills">
           <Skills data={form} onChange={handleOnChange} />

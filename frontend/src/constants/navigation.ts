@@ -10,7 +10,7 @@ export const navigation = [
   },
   {
     name: "Records",
-    href: "/",
+    href: clientRoutes.admin.records,
     Icon: List,
   },
   {

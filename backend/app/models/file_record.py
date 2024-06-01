@@ -1,27 +1,39 @@
 from sqlalchemy import Connection, text
 
+from ..constants.enums import Bucket, Status
+from ..db.utils import query
+
 
 class FileRecordModel:
 
     def __init__(
         self,
-        id: str,
-        status: str | None = None,
+        id: str = "",
         account_id: str | None = None,
         filename: str | None = None,
         filesize: int | None = None,
+        type: Bucket | None = None,
+        status: Status | None = None,
     ):
         self.id = id
         self.filename = filename
-        self.status = status
         self.account_id = account_id
         self.filesize = filesize
+        self.status = status.value if status else None
+        self.type = type.value if type else None
+
+        self.list_filters = """
+        (:filename IS NULL OR POSITION(:filename IN filename) > 0)
+        AND (:status IS NULL OR :status = status)
+        AND (:record_type IS NULL OR :record_type = type)
+        AND (:account = account_id)
+        """
 
     def create_file_record(self, conn: Connection):
         statement = """
           INSERT INTO "FileRecord"
-          (id, filename, status, filesize, account_id)
-          VALUES (:id, :filename, :status, :filesize, :account_id)
+          (id, filename, status, filesize, account_id, type)
+          VALUES (:id, :filename, :status, :filesize, :account_id, :type)
         """
         params = {
             "id": self.id,
@@ -29,6 +41,7 @@ class FileRecordModel:
             "status": self.status,
             "account_id": self.account_id,
             "filesize": self.filesize,
+            "type": self.type,
         }
         conn.execute(text(statement), params)
 
@@ -46,3 +59,37 @@ class FileRecordModel:
         }
 
         conn.execute(text(statement), params)
+
+    def list_records(self, index: int, limit: int):
+        statement = f"""
+        SELECT id, filename, filesize, status, created_at, type FROM "FileRecord"
+        WHERE {self.list_filters}
+        ORDER BY created_at DESC
+        LIMIT :limit
+        OFFSET :index
+        """
+        params = {
+            "account": self.account_id,
+            "record_type": self.type,
+            "filename": self.filename,
+            "status": self.status,
+            "limit": limit,
+            "index": index,
+        }
+
+        result = query(statement, params)
+        return result.mappings().all()
+
+    def get_total_count(self) -> int:
+        statement = f"""
+        SELECT COUNT(*) as total_count FROM "FileRecord"
+        WHERE {self.list_filters}
+        """
+        params = {
+            "account": self.account_id,
+            "record_type": self.type,
+            "filename": self.filename,
+            "status": self.status,
+        }
+        result = query(statement, params).mappings().first()
+        return result["total_count"] if result else 0
