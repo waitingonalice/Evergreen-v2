@@ -5,3 +5,4 @@ from . import PaginationValidation
 class ListRecordsValidation(PaginationValidation):
     status: Status | None = None
     filename: str | None = None
+    id: str | None = None

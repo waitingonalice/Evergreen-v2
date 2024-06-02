@@ -195,7 +195,7 @@ function Projects({
                 variant="primaryLink"
                 to={project.link}
               >
-                <Text type="body-bold">{project.title}</Text>
+                {project.title}
               </Link>
 
               <Text className="my-2" type="caption">

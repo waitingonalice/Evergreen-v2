@@ -15,6 +15,7 @@ class RecordsService(AccountModel):
 
     def list_records(self, input: records.ListRecordsValidation):
         records = FileRecordModel(
+            id=input.id,
             status=input.status,
             filename=input.filename,
             account_id=self.account["id"],

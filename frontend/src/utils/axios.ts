@@ -7,7 +7,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from "axios";
 import { jwtDecode } from "jwt-decode";
-import { NextPageContext } from "next";
+import { GetServerSidePropsContext, NextPageContext } from "next";
 import Router from "next/router";
 import { RoleEnum, apiRoutes, clientRoutes } from "@/constants";
 import {
@@ -19,7 +19,7 @@ import {
 import { getCookie } from "./cookies";
 import { nowInUnixSeconds } from "./formatting";
 
-export type NextSSRType = NextPageContext;
+export type NextSSRType = NextPageContext | GetServerSidePropsContext;
 
 interface AuthToken {
   exp: number;
@@ -34,7 +34,11 @@ class AxiosFactory {
 
   constructor(ctx?: NextSSRType) {
     const authRoutes = Object.values(apiRoutes.v1.auth);
-    const isLoginPage = ctx?.pathname?.includes(clientRoutes.auth.login);
+
+    const isLoginPage =
+      ctx &&
+      "pathname" in ctx &&
+      ctx?.pathname?.includes(clientRoutes.auth.login);
 
     const redirect = (path: string) => {
       if (ctx?.res) {

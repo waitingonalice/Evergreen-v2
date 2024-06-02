@@ -168,7 +168,7 @@ function RecordsTable({
             </Table.Body>
           </Table>
           {limit && index && totalCount && (
-            <Grid className="p-2">
+            <Grid className="px-4 py-1">
               <Pagination
                 className="mb-2"
                 currentIndex={index}

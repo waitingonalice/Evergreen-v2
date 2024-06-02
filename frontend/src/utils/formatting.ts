@@ -125,3 +125,6 @@ export const nowInUnixSeconds = () => Math.round(Date.now()) / 1000;
 
 export const toDDMMMYYYY = (date: Date | string) =>
   dayjs(date).format("DD MMM YYYY");
+
+export const toMMMYYYY = (date: Date | string) =>
+  dayjs(date).format("MMM YYYY");

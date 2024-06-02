@@ -16,7 +16,7 @@ import { Certification } from "./components/Certification";
 import { Experience } from "./components/Experience";
 import { Projects } from "./components/Projects";
 import { Skills } from "./components/Skills";
-import { useCreateResume } from "./loaders/cv";
+import { initFormData, useCreateResume, useGetResume } from "./loaders/cv";
 import { FormProps } from "./type";
 import { validateForm } from "./utils";
 
@@ -24,16 +24,11 @@ interface CVProps {
   isEdit?: boolean;
 }
 function CreateCV({ isEdit = false }: CVProps) {
-  const [form, setForm] = useState<FormProps>({
-    languages: [],
-    techstack: [],
-    experiences: [],
-    certifications: [],
-    projects: [],
-  } as FormProps);
+  const [form, setForm] = useState(initFormData);
   const router = useRouter();
   const { renderToast } = useToast();
   const [createCv, createCVOptions] = useCreateResume();
+  const [getCV, getCVOptions] = useGetResume();
 
   const handleBackClick = () => {
     router.back();
@@ -94,9 +89,11 @@ function CreateCV({ isEdit = false }: CVProps) {
   };
 
   useEffect(() => {
-    if (isEdit) {
-      // const { id } = router.query;
-      // fetch data from api
+    if (isEdit && !getCVOptions.data?.result) {
+      const { id } = router.query;
+      getCV(id as string).then((data) => {
+        setForm(data.result);
+      });
     }
   }, [isEdit, router.query]);
 

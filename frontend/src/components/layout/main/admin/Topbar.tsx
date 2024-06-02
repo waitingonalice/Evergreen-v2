@@ -43,7 +43,7 @@ function Topbar({ onBackClick, ctxButtons }: TopbarProps) {
         )}
         {navigation.map((item) => (
           <LinkComponent
-            textSize="medium"
+            textSize="subhead-2-bold"
             to={item.href}
             key={item.name}
             className={cn(
@@ -89,7 +89,7 @@ function Topbar({ onBackClick, ctxButtons }: TopbarProps) {
                   "flex justify-start w-full bg-primary-main text-secondary-1 py-1 px-1 hover:text-secondary-1",
               )}
               key={item.name}
-              textSize="medium"
+              textSize="subhead-2-bold"
               to={item.href}
               prefixIcon={<item.Icon className="w-6 h-auto" />}
             >

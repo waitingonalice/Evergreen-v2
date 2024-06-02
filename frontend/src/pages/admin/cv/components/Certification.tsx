@@ -53,6 +53,7 @@ function CertificationDialog({
       title="Add Certification"
       open={open}
       onClose={handleClose}
+      withOverlay
       rightFooterChildren={
         <>
           <Button variant="secondary" onClick={handleClose}>

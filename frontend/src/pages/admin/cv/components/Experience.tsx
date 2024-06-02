@@ -9,7 +9,7 @@ import {
   useForm,
 } from "@waitingonalice/design-system";
 import { EmploymentEnum } from "@/constants";
-import { toDDMMMYYYY } from "@/utils";
+import { toMMMYYYY } from "@/utils";
 import { employmentOptions } from "@/utils/options";
 import type { BaseCVComponentProps, Experience, FormProps } from "../type";
 import { experienceSchema } from "../utils";
@@ -107,6 +107,7 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           placeholder="Select start date"
           showError={Boolean(form.errors.start)}
           errorMessage={form.errors.start}
+          calenderView="month"
         />
         <FormNativeDatePicker
           label="End"
@@ -115,6 +116,7 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           value={field.end}
           showError={Boolean(form.errors.end)}
           errorMessage={form.errors.end}
+          calenderView="month"
         />
         <FormInput
           label="Description"
@@ -167,8 +169,8 @@ export function Experience({
             <Text type="subhead-2-bold">{exp.company_name}</Text>
             {exp.start && exp.end && (
               <Text type="caption">
-                {toDDMMMYYYY(exp.start)} -&nbsp;
-                {toDDMMMYYYY(exp.end)}
+                {toMMMYYYY(exp.start)} -&nbsp;
+                {toMMMYYYY(exp.end)}
               </Text>
             )}
           </div>

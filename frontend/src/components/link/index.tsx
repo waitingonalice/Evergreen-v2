@@ -9,7 +9,7 @@ export interface LinkProps
     "variant" | "className" | "disabled" | "size" | "children"
   > {
   to: string;
-  textSize?: "small" | "medium" | "large";
+  textSize?: TextProps["type"];
   prefixIcon?: React.ReactNode;
   onClick?: () => void;
 }
@@ -21,7 +21,7 @@ const LinkComponent = ({
   className,
   prefixIcon,
   size,
-  textSize = "small",
+  textSize = "body",
   onClick,
 }: LinkProps) => {
   const handleOnClickLink = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -56,12 +56,6 @@ const LinkComponent = ({
     errorLink: "text-error-main hover:text-error-dark active:text-error-dark",
   };
 
-  const textSizeMapper: Record<string, TextProps["type"]> = {
-    small: "body",
-    medium: "subhead-2-bold",
-    large: "subhead-1",
-  };
-
   return (
     <Link
       onClick={handleOnClickLink}
@@ -69,7 +63,7 @@ const LinkComponent = ({
       className={cn(baseStyle, variantMapper[variant], className)}
     >
       {prefixIcon}
-      <Text type={textSizeMapper[textSize]}>{children}</Text>
+      <Text type={textSize}>{children}</Text>
     </Link>
   );
 };
