@@ -75,19 +75,28 @@ function FormWrapper({
         <Text type="subhead-2-bold">{title}</Text>
         <SortableContext items={data[type]}>
           {data[type]?.map((data, index) => (
-            <Sortable key={data} id={data} attachListener>
-              <div className="flex gap-x-4 items-center border-b border-b-gray-2 pb-4">
-                <Button
-                  variant="primaryLink"
-                  onClick={() => handleRemove(index)}
-                >
-                  <X className={iconStyle} />
-                </Button>
-                <Text className="w-full" type="body">
-                  {data}
-                </Text>
-                <AlignJustify className={iconStyle} />
-              </div>
+            <Sortable key={data} id={data}>
+              {({ attributes, listeners, isDragging }) => (
+                <div className="flex gap-x-4 items-center border-b border-b-gray-2 pb-4">
+                  <Button
+                    variant="primaryLink"
+                    onClick={() => handleRemove(index)}
+                  >
+                    <X className={iconStyle} />
+                  </Button>
+                  <Text className="w-full" type="body">
+                    {data}
+                  </Text>
+                  <span {...attributes} {...listeners}>
+                    <AlignJustify
+                      className={iconStyle}
+                      style={{
+                        cursor: isDragging ? "grabbing" : "grab",
+                      }}
+                    />
+                  </span>
+                </div>
+              )}
             </Sortable>
           ))}
         </SortableContext>

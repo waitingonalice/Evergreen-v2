@@ -2,6 +2,7 @@ import {
   DraggableAttributes,
   KeyboardSensor,
   MouseSensor,
+  TouchSensor,
   useDraggable,
   useDroppable,
   useSensor,
@@ -11,14 +12,17 @@ import { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+interface ChildrenProps {
+  attributes: DraggableAttributes;
+  listeners?: SyntheticListenerMap;
+  isDragging: boolean;
+}
+
 interface InteractivityProps {
   id: string | number;
   children:
     | React.ReactNode
-    | ((
-        attributes: DraggableAttributes,
-        listeners?: SyntheticListenerMap,
-      ) => React.ReactNode);
+    | ((childrenProps: ChildrenProps) => React.ReactNode);
 }
 function Draggable({ id, children }: InteractivityProps) {
   const { attributes, listeners, setNodeRef, transform, isDragging } =
@@ -39,7 +43,7 @@ function Draggable({ id, children }: InteractivityProps) {
       {...listeners}
     >
       {typeof children === "function"
-        ? children(attributes, listeners)
+        ? children({ attributes, listeners, isDragging })
         : children}
     </div>
   );
@@ -110,7 +114,7 @@ function Sortable({
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    cursor: isDragging ? "grabbing" : "grab",
+    ...(attachListener && { cursor: isDragging ? "grabbing" : "grab" }),
     zIndex: isDragging ? 1 : 0,
     outline: "none",
   };
@@ -123,7 +127,7 @@ function Sortable({
       className={className}
     >
       {typeof children === "function"
-        ? children(attributes, listeners)
+        ? children({ attributes, listeners, isDragging })
         : children}
     </div>
   );
@@ -139,7 +143,8 @@ const useDragSensors = () => {
     },
   });
   const keyboardSensor = useSensor(KeyboardSensor);
-  const sensors = useSensors(mouseSensor, keyboardSensor);
+  const touchSensor = useSensor(TouchSensor);
+  const sensors = useSensors(mouseSensor, keyboardSensor, touchSensor);
   return sensors;
 };
 
