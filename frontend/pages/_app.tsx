@@ -4,7 +4,7 @@ import Head from "next/head";
 import { ToastProvider, cn } from "@waitingonalice/design-system/";
 import { AppProvider, CustomProps } from "@/components/context";
 import "@/styles/globals.css";
-import { isBrowser } from "@/utils";
+import { isBrowser, isServer } from "@/utils";
 import { getUser } from "@/utils/auth";
 
 // Create a client
@@ -70,7 +70,7 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
 
   const { result } = user.data;
   // eslint-disable-next-line no-console
-  console.info(result);
+  if (isServer()) console.info(result);
   return {
     ...props,
     customProps: {

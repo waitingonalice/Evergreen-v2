@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Button,
   Dialog,
@@ -11,6 +12,7 @@ import {
 import { EmploymentEnum } from "@/constants";
 import { toMMMYYYY } from "@/utils";
 import { employmentOptions } from "@/utils/options";
+import { useSection } from "../hooks/useSection";
 import type { BaseCVComponentProps, Experience, FormProps } from "../type";
 import { experienceSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
@@ -19,6 +21,8 @@ interface ExperienceDialogProps {
   open: boolean;
   onClose: () => void;
   onAdd: (data: Experience) => void;
+  onEdit: (data: Experience) => void;
+  data?: Experience;
 }
 
 const init: Experience = {
@@ -29,11 +33,17 @@ const init: Experience = {
   end: null,
   job_description: "",
 };
-function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
-  const [field, setField] = useState(init);
+function ExperienceDialog({
+  open,
+  onClose,
+  onAdd,
+  onEdit,
+  data,
+}: ExperienceDialogProps) {
+  const [field, setField] = useState(data ?? init);
 
   const form = useForm({
-    zod: experienceSchema(field),
+    zod: experienceSchema,
     data: field,
   });
 
@@ -42,10 +52,18 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
     onClose();
     form.clearErrors();
   };
+
   const handleAddExperience = () => {
     const success = form.onSubmit();
     if (!success) return;
     onAdd(field);
+    handleOnClose();
+  };
+
+  const handleEditExperience = () => {
+    const success = form.onSubmit();
+    if (!success) return;
+    onEdit(field);
     handleOnClose();
   };
 
@@ -56,6 +74,8 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
     form.validate(key, val);
     setField((prev) => ({ ...prev, [key]: val }));
   };
+
+  const handleAction = data ? handleEditExperience : handleAddExperience;
 
   return (
     <Dialog
@@ -68,7 +88,7 @@ function ExperienceDialog({ open, onClose, onAdd }: ExperienceDialogProps) {
           <Button variant="secondary" onClick={handleOnClose}>
             Cancel
           </Button>
-          <Button onClick={handleAddExperience}>Add</Button>
+          <Button onClick={handleAction}>{data ? "Edit" : "Add"}</Button>
         </>
       }
     >
@@ -136,30 +156,39 @@ export function Experience({
   data,
   onChange,
 }: BaseCVComponentProps<FormProps["experiences"]>) {
-  const [openDialog, setOpenDialog] = useState(false);
+  const {
+    data: experienceData,
+    showDialog,
+    handleEdit,
+    handleEditCommit,
+    handleModal,
+    handleRemove,
+  } = useSection(data.experiences);
 
   const handleAddExperience = (exp: Experience) => {
     onChange("experiences", [...data.experiences, exp]);
   };
 
-  const handleModal = () => {
-    setOpenDialog((prev) => !prev);
+  const handleCommitExperience = (exp: Experience) => {
+    onChange("experiences", handleEditCommit(exp));
   };
 
   const handleRemoveExperience = (index: number) => {
-    onChange(
-      "experiences",
-      data.experiences.filter((_, i) => i !== index),
-    );
+    onChange("experiences", handleRemove(index));
   };
 
   return (
     <SectionWrapper buttonLabel="Add Experience" onClick={handleModal}>
-      <ExperienceDialog
-        open={openDialog}
-        onClose={handleModal}
-        onAdd={handleAddExperience}
-      />
+      {showDialog && (
+        <ExperienceDialog
+          open={showDialog}
+          onClose={handleModal}
+          onAdd={handleAddExperience}
+          onEdit={handleCommitExperience}
+          data={experienceData?.data}
+        />
+      )}
+
       {data.experiences.map((exp, index) => (
         <div
           key={exp.company_name}
@@ -175,17 +204,23 @@ export function Experience({
             )}
           </div>
           <Text type="body">{exp.role}</Text>
-          <Text className="whitespace-pre-line" type="caption">
+          <Text className="whitespace-pre-line mt-2" type="caption">
             {exp.job_description}
           </Text>
-          <Button
-            className="ml-auto"
-            size="small"
-            variant="errorLink"
-            onClick={() => handleRemoveExperience(index)}
-          >
-            Remove
-          </Button>
+          <div className="flex w-full items-center gap-x-2 justify-end">
+            <Button onClick={() => handleEdit(index)} variant="primaryLink">
+              <Pencil className="w-4 h-4" />
+              <Text type="body">Edit</Text>
+            </Button>
+            <Button
+              size="small"
+              variant="errorLink"
+              onClick={() => handleRemoveExperience(index)}
+            >
+              <Trash2 className="w-4 h-4" />
+              <Text type="body">Remove</Text>
+            </Button>
+          </div>
         </div>
       ))}
     </SectionWrapper>

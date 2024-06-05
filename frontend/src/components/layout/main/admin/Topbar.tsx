@@ -27,7 +27,7 @@ function Topbar({ onBackClick, ctxButtons }: TopbarProps) {
     router.route.split("/").slice(0, 3).join("/") === href;
 
   return (
-    <header className="sticky top-0 flex justify-between items-center gap-x-4 h-16 gap-4 border-b bg-secondary-1 px-4 md:px-6">
+    <header className="sticky top-0 flex justify-between items-center gap-x-4 h-16 gap-4 border-b bg-secondary-1 px-4 md:px-6 z-10">
       <nav
         className={cn("hidden", "gap-6 md:flex md:flex-row md:items-center")}
       >

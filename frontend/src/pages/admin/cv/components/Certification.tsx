@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import {
   Button,
   Dialog,
@@ -6,7 +7,8 @@ import {
   Text,
   useForm,
 } from "@waitingonalice/design-system";
-import { BaseCVComponentProps, FormProps } from "../type";
+import { useSection } from "../hooks/useSection";
+import { BaseCVComponentProps, Certifications, FormProps } from "../type";
 import { certificationSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
 
@@ -16,6 +18,8 @@ interface CertificationDialogProps {
   open: boolean;
   onClose: () => void;
   onAdd: (data: CertificationType) => void;
+  onEdit: (data: CertificationType) => void;
+  data?: Certifications | null;
 }
 const init = {
   title: "",
@@ -25,8 +29,10 @@ function CertificationDialog({
   open,
   onClose,
   onAdd,
+  onEdit,
+  data,
 }: CertificationDialogProps) {
-  const [field, setField] = useState<CertificationType>(init);
+  const [field, setField] = useState<CertificationType>(data ?? init);
   const form = useForm({ zod: certificationSchema, data: field });
 
   const handleClose = () => {
@@ -41,6 +47,12 @@ function CertificationDialog({
     onClose();
   };
 
+  const handleEdit = () => {
+    if (!form.onSubmit()) return;
+    onEdit(field);
+    handleClose();
+  };
+
   const handleOnChangeFields = (
     key: keyof CertificationType,
     value: string,
@@ -48,6 +60,8 @@ function CertificationDialog({
     form.validate(key, value);
     setField((prev) => ({ ...prev, [key]: value }));
   };
+
+  const handleAction = data ? handleEdit : handleAdd;
   return (
     <Dialog
       title="Add Certification"
@@ -59,7 +73,7 @@ function CertificationDialog({
           <Button variant="secondary" onClick={handleClose}>
             Cancel
           </Button>
-          <Button onClick={handleAdd}>Add</Button>
+          <Button onClick={handleAction}>{data ? "Edit" : "Add"}</Button>
         </>
       }
     >
@@ -88,29 +102,38 @@ function Certification({
   data,
   onChange,
 }: BaseCVComponentProps<FormProps["certifications"]>) {
-  const [showDialog, setShowDialog] = useState(false);
-
-  const handleModal = () => {
-    setShowDialog((prev) => !prev);
-  };
+  const {
+    data: certData,
+    showDialog,
+    handleEdit,
+    handleEditCommit,
+    handleModal,
+    handleRemove,
+  } = useSection(data.certifications);
 
   const handleAddCertification = (cert: CertificationType) => {
     onChange("certifications", [...data.certifications, cert]);
   };
 
-  const handleRemove = (index: number) => {
-    const updateData = [...data.certifications];
-    updateData.splice(index, 1);
-    onChange("certifications", updateData);
+  const handleRemoveCert = (index: number) => {
+    onChange("certifications", handleRemove(index));
+  };
+
+  const handleCommitCertification = (cert: CertificationType) => {
+    onChange("certifications", handleEditCommit(cert));
   };
 
   return (
     <SectionWrapper buttonLabel="Add Certification" onClick={handleModal}>
-      <CertificationDialog
-        open={showDialog}
-        onClose={handleModal}
-        onAdd={handleAddCertification}
-      />
+      {showDialog && (
+        <CertificationDialog
+          open={showDialog}
+          onClose={handleModal}
+          onAdd={handleAddCertification}
+          onEdit={handleCommitCertification}
+          data={certData?.data}
+        />
+      )}
       {data.certifications.length > 0 && (
         <ul className="mb-4 flex flex-col gap-y-4">
           {data.certifications.map((cert, index) => (
@@ -119,13 +142,20 @@ function Certification({
               <Text className="my-2" type="caption">
                 {cert.description}
               </Text>
-              <Button
-                className="ml-auto"
-                variant="errorLink"
-                onClick={() => handleRemove(index)}
-              >
-                Remove
-              </Button>
+
+              <span className="flex gap-x-4 justify-end w-full">
+                <Button onClick={() => handleEdit(index)} variant="primaryLink">
+                  <Pencil className="w-4 h-4" />
+                  <Text type="body">Edit</Text>
+                </Button>
+                <Button
+                  variant="errorLink"
+                  onClick={() => handleRemoveCert(index)}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <Text type="body">Remove</Text>
+                </Button>
+              </span>
             </li>
           ))}
         </ul>

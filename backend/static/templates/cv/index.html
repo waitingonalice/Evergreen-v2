@@ -106,6 +106,10 @@
         position: relative;
       }
 
+      #projects {
+        position: relative;
+      }
+
       .techstack {
         border: 1px solid #888;
         border-radius: 3px;
@@ -218,7 +222,6 @@
 
         main {
           margin: 0;
-          max-width: 920px;
           display: flex;
           box-shadow: none;
         }
@@ -228,8 +231,8 @@
         }
 
         main > div:last-child {
-          width: 21%;
-          margin-left: 4%;
+          width: 20%;
+          margin-left: 2%;
         }
 
         #filters {
@@ -275,7 +278,7 @@
         </header>
 
         <section id="skills">
-          <h2>Skills</h2>
+          <h2 style="margin-bottom: 8px;">Skills</h2>
           <div>
             <div>
               <p class="title-left">Languages</p>
@@ -296,78 +299,68 @@
 
         <section
           id="experience"
-          itemprop="memberOf"
-          itemscope=""
-          itemtype="http://schema.org/Organization"
+          style="page-break-after: always;"
         >
-          <h2>Experience</h2>
+          <h2 style="margin-bottom: 8px;">Experience</h2>
           {% for experience in experiences %}
-            <div style="display: flex; justify-content: space-between;">
-              <h3>{{ experience["company_name"] }}</h3>
-              <span>
-                <time>{{ experience["start"] }}</time>
-                -
-                <time>{{ experience["end"] }}</time>
-              </span>
+            <div style="margin-bottom: 16px;">
+              <div style="display: flex; justify-content: space-between;">
+                <h3>{{ experience["company_name"] }}</h3>
+                <span>
+                  <time>{{ experience["start"] }}</time>
+                  -
+                  <time>{{ experience["end"] }}</time>
+                </span>
+              </div>
+              <div>
+                <h4>{{ experience["role"] }}</h4>
+              </div>
+              <div style="margin-bottom: 2px;">
+                <h4>{{ experience["employment"] }}</h4>
+              </div>
+              <p style="white-space: pre-line;">
+                {{ experience["job_description"] }}
+              </p>
             </div>
-            <div>
-              <h4>{{ experience["role"] }}</h4>
-            </div>
-            <div style="margin-bottom: 4px 0;">
-              <h4>{{ experience["employment"] }}</h4>
-            </div>
-            <p style="white-space: pre-line;">
-              {{ experience["job_description"] }}
-            </p>
-            <br />
-            <br />
           {% endfor %}
         </section>
 
-        <section>
-          <h2>Education and Certifications</h2>
-          <ul
-            id="educationAndCert"
-          >
-            {% for cert in certifications %}
-            <li>
+        <section id="educationAndCert">
+          <h2 style="margin-bottom: 8px;">Education and Certifications</h2>
+          {% for cert in certifications %}
+            <div style="margin-bottom: 16px;">
               <h3>{{ cert["title"] }}</h3>
               <p>
                 {{ cert["description"] }}
               </p>
-            </li>
-            {% endfor %}
-          </ul>
+            </div>
+          {% endfor %}
         </section>
 
         <section
           id="projects"
-          itemprop="memberOf"
-          itemscope=""
-          itemtype="http://schema.org/Organization"
         >
-          <h2>Projects</h2>
-          <h4>
-            <ul itemprop="description">
-              {% for project in projects %}
-              <li>
-                  <div>
-                    <a href="{{ project["link"] }}" target="_blank" class="title">
-                      {{ project["title"] }}
-                    </a>
-                  </div>
-                  <p>
-                    {{ project["description"] }}
-                  </p>
-                  <div>
-                    {% for tech in project["techstack"] %}
-                      <p class="techstack">{{ tech }}</p>
-                    {% endfor %}
-                  </div>
-                </li>
+          <h2 style="margin-bottom: 8px;">Projects</h2>
+          {% for project in projects %}
+          <div style="margin-bottom: 16px;">
+            <h3>
+              <a
+              href="{{ project["link"] }}"
+              target="_blank"
+              >
+                  {{ project["title"] }}
+              </a>
+            </h3>
+            <p style="margin-top: 8px;">
+              {{ project["description"] }}
+            </p>
+            <div>
+              {% for tech in project["techstack"] %}
+              <p class="techstack">{{ tech }}</p>
               {% endfor %}
-            </ul>
-          </h4>
+            </div>
+          </div>
+          {% endfor %}
         </section>
       </div>
     </main>
