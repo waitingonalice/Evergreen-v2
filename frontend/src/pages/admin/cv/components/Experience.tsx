@@ -10,7 +10,7 @@ import {
   useForm,
 } from "@waitingonalice/design-system";
 import { EmploymentEnum } from "@/constants";
-import { toMMMYYYY } from "@/utils";
+import { toMMMMYYYY } from "@/utils";
 import { employmentOptions } from "@/utils/options";
 import { useSection } from "../hooks/useSection";
 import type { BaseCVComponentProps, Experience, FormProps } from "../type";
@@ -198,8 +198,8 @@ export function Experience({
             <Text type="subhead-2-bold">{exp.company_name}</Text>
             {exp.start && exp.end && (
               <Text type="caption">
-                {toMMMYYYY(exp.start)} -&nbsp;
-                {toMMMYYYY(exp.end)}
+                {toMMMMYYYY(exp.start)} -&nbsp;
+                {toMMMMYYYY(exp.end)}
               </Text>
             )}
           </div>

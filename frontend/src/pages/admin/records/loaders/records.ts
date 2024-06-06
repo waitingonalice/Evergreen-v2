@@ -1,12 +1,14 @@
-import { BucketTypeEnum, StatusEnum, apiRoutes } from "@/constants";
+import { BucketEnum, StatusEnum, apiRoutes } from "@/constants";
 import { useLazyQuery } from "@/hooks/useLazyQuery";
+import { Maybe } from "@/types";
 import { RecordsType } from "@/types/records";
 import { AxiosFactory } from "@/utils";
 
 export interface ListRecordInput {
   limit: number;
   index: number;
-  status?: StatusEnum;
+  status?: Maybe<StatusEnum>;
+  record_type?: Maybe<BucketEnum>;
   filename?: string;
 }
 
@@ -38,7 +40,7 @@ export const useListRecords = () => {
 
 interface DownloadRecordInput {
   filename: string;
-  bucket: BucketTypeEnum;
+  bucket: BucketEnum;
 }
 interface DownloadRecordResponse {
   result: string;
@@ -54,7 +56,7 @@ export const useDownloadRecord = () => {
       {
         params: {
           ...input,
-          ...(input.bucket === BucketTypeEnum.Resume && {
+          ...(input.bucket === BucketEnum.Resume && {
             download_name: "resume.pdf",
           }),
         },

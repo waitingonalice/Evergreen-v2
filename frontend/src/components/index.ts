@@ -4,3 +4,4 @@ export * from "./layout/main/admin";
 export * from "./link";
 export * from "./grid";
 export * from "./dnd";
+export * from "./tag";

@@ -1,11 +1,12 @@
 /* eslint-disable react/no-array-index-key */
 import React from "react";
-import { XCircleIcon } from "@heroicons/react/20/solid";
+import { XIcon } from "lucide-react";
 import { Button, Text, cn } from "@waitingonalice/design-system";
 
 export interface TagProps {
   label: string;
-  onClear?: () => void;
+  value?: string;
+  onClear?: (value?: string) => void;
   size?: "small" | "default";
   type?: "success" | "fail" | "pending" | "default";
   rounded?: boolean;
@@ -17,11 +18,12 @@ export function Tag(props: TagProps) {
     onClear,
     size = "default",
     type = "default",
-    rounded = false,
+    rounded,
+    value,
   } = props;
 
   const handleOnClear = () => {
-    if (onClear) onClear();
+    if (onClear) onClear(value);
   };
 
   const colorMapping: Record<NonNullable<TagProps["type"]>, string> = {
@@ -36,21 +38,18 @@ export function Tag(props: TagProps) {
       className={cn(
         "border-dotted border-gray-500",
         "flex items-center gap-x-1 border w-fit h-fit rounded-md",
-        size === "small" ? "px-2 py-1" : "p-2",
+        size === "small" ? "px-2 py-0.5" : "p-2",
         colorMapping[type],
         rounded && "rounded-3xl",
       )}
     >
       {onClear && (
-        <Button
-          className="w-4 h-4 text-gray-500 cursor-pointer active:text-secondary-5 hover:text-typography-1"
-          onClick={handleOnClear}
-        >
-          <XCircleIcon />
+        <Button variant="primaryLink" onClick={handleOnClear}>
+          <XIcon className="w-4 h-4" />
         </Button>
       )}
 
-      <Text className="whitespace-nowrap" type="caption">
+      <Text className="whitespace-nowrap text-secondary-4" type="caption">
         {label}
       </Text>
     </div>

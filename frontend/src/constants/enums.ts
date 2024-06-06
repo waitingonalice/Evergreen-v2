@@ -268,6 +268,6 @@ export enum StatusEnum {
   Failed = "FAILED",
 }
 
-export enum BucketTypeEnum {
+export enum BucketEnum {
   Resume = "resume",
 }

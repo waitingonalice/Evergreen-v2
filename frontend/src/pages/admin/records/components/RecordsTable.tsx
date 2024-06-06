@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { CheckCircleIcon, XCircleIcon } from "lucide-react";
 import { nanoid } from "nanoid";
 import {
@@ -12,26 +12,28 @@ import {
   useToast,
 } from "@waitingonalice/design-system";
 import { Grid, Link } from "@/components";
-import { BucketTypeEnum, StatusEnum, clientRoutes } from "@/constants";
+import { BucketEnum, StatusEnum, clientRoutes } from "@/constants";
 import { RecordsType } from "@/types/records";
-import { formatBytes, toDDMMMYYYY } from "@/utils";
+import { formatBytes, toDDMMMMYYYYHHMM } from "@/utils";
 import { FilterInput, useDownloadRecord } from "../loaders/records";
+import { FilterDrawer } from "./FilterDrawer";
+import { TableHeader } from "./TableHeader";
 
 export const columns = [
   {
-    name: "File name",
+    name: "Name",
     className: "w-1/4",
   },
 
   {
     name: "Status",
-    className: "w-[100px]",
+    className: "w-[160px]",
   },
   {
     name: "Created time",
   },
   {
-    name: "Record type",
+    name: "Type",
   },
   {
     name: "Actions",
@@ -50,32 +52,28 @@ const statusIconMap: Record<StatusEnum, React.ReactNode> = {
 };
 
 const recordTypeMap = {
-  [BucketTypeEnum.Resume]: "Resume",
+  [BucketEnum.Resume]: "Resume",
 };
 interface RecordsTableProps {
   records?: RecordsType[];
-  limit?: number;
-  index?: number;
   totalCount?: number;
   onFilter: (arg: FilterInput) => void;
+  filters?: FilterInput;
 }
 function RecordsTable({
   records,
-  limit,
-  index,
   totalCount,
+  filters,
   onFilter,
 }: RecordsTableProps) {
   const { renderToast } = useToast();
   const [downloadRecord] = useDownloadRecord();
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const handlePagination = (index: number) => {
-    onFilter({ index, limit });
+    onFilter({ index, limit: filters?.limit });
   };
-  const handleDownloadRecord = async (
-    bucket: BucketTypeEnum,
-    filename: string,
-  ) => {
+  const handleDownloadRecord = async (bucket: BucketEnum, filename: string) => {
     const toastProps: ToastContextBaseProps = {
       title: "",
       show: true,
@@ -102,10 +100,34 @@ function RecordsTable({
     }
   };
 
+  const handleDisplayDrawer = () => {
+    setOpenDrawer((prev) => !prev);
+  };
+
   return (
     <>
+      {openDrawer && (
+        <FilterDrawer
+          onChangeFilter={onFilter}
+          onClose={handleDisplayDrawer}
+          open={openDrawer}
+          filters={filters}
+        />
+      )}
+      <TableHeader
+        onChangeFilter={onFilter}
+        filters={filters}
+        onDisplayDrawer={handleDisplayDrawer}
+      />
       {!records || records.length === 0 ? (
-        <EmptyTable columns={columns} />
+        <EmptyTable
+          columns={columns}
+          content={
+            <Text className="text-secondary-1" type="body-bold">
+              No records found.
+            </Text>
+          }
+        />
       ) : (
         <>
           <Table>
@@ -134,8 +156,11 @@ function RecordsTable({
                   </Table.Cell>
                   <Table.Cell>{statusIconMap[data.status]}</Table.Cell>
                   <Table.Cell>
-                    <Text className="text-secondary-1" type="caption">
-                      {toDDMMMYYYY(data.created_at) || "N/A"}
+                    <Text
+                      className="text-secondary-1 whitespace-nowrap"
+                      type="caption"
+                    >
+                      {toDDMMMMYYYYHHMM(data.created_at) || "N/A"}
                     </Text>
                   </Table.Cell>
                   <Table.Cell>
@@ -153,7 +178,7 @@ function RecordsTable({
                     >
                       Download
                     </Button>
-                    {data.type === BucketTypeEnum.Resume && (
+                    {data.type === BucketEnum.Resume && (
                       <Link
                         variant="secondary"
                         size="small"
@@ -167,12 +192,12 @@ function RecordsTable({
               ))}
             </Table.Body>
           </Table>
-          {limit && index && totalCount && (
+          {filters?.limit && filters?.index && totalCount && (
             <Grid className="px-4 py-1">
               <Pagination
                 className="mb-2"
-                currentIndex={index}
-                currentLimit={limit}
+                currentIndex={filters?.index}
+                currentLimit={filters?.limit}
                 totalCount={totalCount}
                 onClick={handlePagination}
               />

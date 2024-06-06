@@ -19,6 +19,7 @@ class RecordsService(AccountModel):
             status=input.status,
             filename=input.filename,
             account_id=self.account["id"],
+            type=input.record_type,
         )
         result = records.list_records(input.index, input.limit)
         if len(result) == 0:

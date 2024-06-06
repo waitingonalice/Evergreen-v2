@@ -3,7 +3,7 @@
     "@dnd-kit/core": "^6.1.0",
     "@dnd-kit/sortable": "^8.0.0",
     "@heroicons/react": "^2.0.13",
-    "@waitingonalice/design-system": "^1.2.70",
+    "@waitingonalice/design-system": "^1.2.71",
     "axios": "^1.6.7",
     "clsx": "^2.0.0",
     "js-cookie": "^3.0.5",
