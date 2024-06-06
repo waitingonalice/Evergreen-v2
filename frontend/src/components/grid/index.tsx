@@ -9,7 +9,7 @@ interface GridProps {
 }
 function Grid({ title, children, className, callToAction }: GridProps) {
   return (
-    <div className="w-full max-w-screen-2xl">
+    <div className="w-full">
       <div className="flex justify-between items-center mb-4">
         <Text className="text-secondary-1" type="subhead-1-bold">
           {title}

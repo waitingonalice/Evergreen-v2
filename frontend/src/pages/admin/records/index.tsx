@@ -17,9 +17,8 @@ function Records() {
           <RecordsTable
             records={data?.result}
             totalCount={data?.total_count}
-            limit={filter?.limit}
-            index={filter?.index}
             onFilter={handleFilter}
+            filters={filter}
           />
         )}
       </AdminLayout.Content>

@@ -1,4 +1,4 @@
-import { BucketTypeEnum, StatusEnum } from "@/constants";
+import { BucketEnum, StatusEnum } from "@/constants";
 
 export interface RecordsType {
   id: string;
@@ -6,5 +6,5 @@ export interface RecordsType {
   filesize: number;
   status: StatusEnum;
   created_at: Date;
-  type: BucketTypeEnum;
+  type: BucketEnum;
 }

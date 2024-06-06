@@ -110,18 +110,16 @@ export const objectify = <T>(arr: T[], key?: keyof T) => {
   return obj;
 };
 
-export const generateOptions = <T extends Record<string, string>>(arg: T) => {
-  const options = Object.entries(arg).map(([key, value]) => ({
-    label: value,
-    value: key,
-  }));
-  return options;
-};
-
 export const getDomain = (hostname: string) =>
   hostname.split(".").reverse().slice(0, 2).reverse().join(".");
 
 export const nowInUnixSeconds = () => Math.round(Date.now()) / 1000;
 
-export const toDDMMMYYYY = (date: Date | string) =>
-  dayjs(date).format("DD MMM YYYY");
+export const toDDMMMMYYYY = (date: Date | string) =>
+  dayjs(date).format("DD MMMM YYYY");
+
+export const toMMMMYYYY = (date: Date | string) =>
+  dayjs(date).format("MMMM YYYY");
+
+export const toDDMMMMYYYYHHMM = (date: Date | string) =>
+  dayjs(date).format("DD MMMM YYYY, HH:mm");

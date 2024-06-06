@@ -18,7 +18,7 @@ function Content({ children, className }: ContentProps) {
   return (
     <div
       className={cn(
-        "p-4 mt-8  flex justify-center flex-col items-center",
+        "p-4 mt-8 flex justify-center flex-col items-center",
         "md:p-8",
         className,
       )}

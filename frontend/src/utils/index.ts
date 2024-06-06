@@ -5,3 +5,4 @@ export * from "./environment";
 export * from "./axios";
 export * from "./cookies";
 export * from "./auth";
+export * from "./options";

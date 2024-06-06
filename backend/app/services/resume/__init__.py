@@ -1,5 +1,5 @@
 import json
-from datetime import date
+from datetime import datetime
 from typing import Any
 from uuid import uuid4
 
@@ -73,10 +73,10 @@ class ResumeService(AccountModel):
 
             def format_date(model: dict[str, Any]):
                 update = model.copy()
-                start_date: date = update["start"]
-                end_date: date = update["end"]
-                update["start"] = start_date.strftime("%Y-%B")
-                update["end"] = end_date.strftime("%Y-%B")
+                start_date: datetime = update["start"]
+                end_date: datetime = update["end"]
+                update["start"] = start_date.strftime("%B %Y")
+                update["end"] = end_date.strftime("%B %Y")
                 return update
 
             formatted_experience = [
@@ -87,8 +87,8 @@ class ResumeService(AccountModel):
                 for exp in body_dict["projects"]
             ]
 
-            body_dict["experiences"] = formatted_experience
             body_dict["projects"] = formatted_projects
+            body_dict["experiences"] = formatted_experience
             stringify_content = json.dumps(body_dict)
 
             def add_entries(conn: Connection):
@@ -113,4 +113,8 @@ class ResumeService(AccountModel):
         if data is None:
             raise ValueError(error.ErrorCode.BAD_REQUEST)
         content = json.loads(data["content"])
+        for exp in content["experiences"]:
+            exp["start"] = datetime.strptime(exp["start"], "%B %Y")
+            exp["end"] = datetime.strptime(exp["end"], "%B %Y")
+
         return {"result": content}

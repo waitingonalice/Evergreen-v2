@@ -1,21 +1,15 @@
 /* eslint-disable no-restricted-syntax */
 import { z } from "zod";
 import { ValueError } from "@/utils/error";
-import { Experience, FormProps } from "./type";
+import { FormProps } from "./type";
 
-const experienceSchema = (field: Experience) =>
-  z.object({
-    company_name: z.string().min(1),
-    employment: z.string().min(1),
-    role: z.string().min(1),
-    start: z.date().max(field.end ?? new Date(), {
-      message: "Start date must be before end date",
-    }),
-    end: z.date().min(field.start ?? new Date(0), {
-      message: "End date must be after start date",
-    }),
-    job_description: z.string().min(1),
-  });
+const experienceSchema = z.object({
+  company_name: z.string().min(1),
+  employment: z.string().min(1),
+  role: z.string().min(1),
+
+  job_description: z.string().min(1),
+});
 
 const projectSchema = z.object({
   title: z.string().min(1),

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AlignJustify, PlusIcon, X } from "lucide-react";
+import { Pencil, PlusIcon, Trash2, X } from "lucide-react";
 import {
   Button,
   Dialog,
@@ -9,6 +9,7 @@ import {
   useForm,
 } from "@waitingonalice/design-system";
 import { Link } from "@/components";
+import { useSection } from "../hooks/useSection";
 import type { BaseCVComponentProps, FormProps, Projects } from "../type";
 import { projectSchema } from "../utils";
 import { SectionWrapper } from "./SectionWrapper";
@@ -16,8 +17,12 @@ import { SectionWrapper } from "./SectionWrapper";
 interface ProjectDialogProps {
   onAdd: (data: Projects) => void;
   onClose: () => void;
+  onEdit: (data: Projects) => void;
+  data?: Projects | null;
   open: boolean;
 }
+
+type ProjectFields = Projects & { techstackField: string };
 
 const init = {
   title: "",
@@ -26,10 +31,19 @@ const init = {
   techstack: [],
   techstackField: "",
 };
-function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
-  const [field, setField] = useState<Projects & { techstackField: string }>(
-    init,
-  );
+function ProjectDialog({
+  open,
+  data,
+  onEdit,
+  onAdd,
+  onClose,
+}: ProjectDialogProps) {
+  const updateData = data && {
+    ...data,
+    techstackField: "",
+  };
+
+  const [field, setField] = useState<ProjectFields>(updateData ?? init);
   const [showTechInput, setShowTechInput] = useState(false);
 
   const form = useForm({
@@ -50,6 +64,15 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
     onAdd(field);
     handleOnClose();
   };
+
+  const handleEditProject = () => {
+    const success = form.onSubmit();
+    if (!success) return;
+    onEdit(field);
+    handleOnClose();
+  };
+
+  const handleAction = data ? handleEditProject : handleAddProject;
 
   const handleOnChange = (
     key: keyof Projects | "techstackField",
@@ -88,7 +111,7 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
           <Button variant="secondary" onClick={handleOnClose}>
             Cancel
           </Button>
-          <Button onClick={handleAddProject}>Add</Button>
+          <Button onClick={handleAction}>{data ? "Edit" : "Add"}</Button>
         </>
       }
     >
@@ -133,7 +156,7 @@ function ProjectDialog({ open, onAdd, onClose }: ProjectDialogProps) {
                 <X className="w-4 h-4" />
               </Button>
               <Text type="caption">{tech}</Text>
-              <AlignJustify className="w-4 h-4 ml-auto" />
+              {/* <AlignJustify className="w-4 h-4 ml-auto" /> */}
             </li>
           ))}
         </ul>
@@ -163,29 +186,37 @@ function Projects({
   data,
   onChange,
 }: BaseCVComponentProps<FormProps["projects"]>) {
-  const [showDialog, setShowDialog] = useState(false);
-
-  const handleModal = () => {
-    setShowDialog((prev) => !prev);
-  };
+  const {
+    data: projectData,
+    showDialog,
+    handleEdit,
+    handleEditCommit,
+    handleModal,
+    handleRemove,
+  } = useSection(data.projects);
 
   const handleAddProject = (project: Projects) => {
     onChange("projects", [...data.projects, project]);
   };
 
   const handleRemoveProject = (index: number) => {
-    const update = [...data.projects];
-    update.splice(index, 1);
-    onChange("projects", update);
+    onChange("projects", handleRemove(index));
   };
 
+  const handleCommitProjects = (project: Projects) => {
+    onChange("projects", handleEditCommit(project));
+  };
   return (
     <SectionWrapper buttonLabel="Add Project" onClick={handleModal}>
-      <ProjectDialog
-        onAdd={handleAddProject}
-        onClose={handleModal}
-        open={showDialog}
-      />
+      {showDialog && (
+        <ProjectDialog
+          data={projectData?.data}
+          onEdit={handleCommitProjects}
+          onAdd={handleAddProject}
+          onClose={handleModal}
+          open={showDialog}
+        />
+      )}
       {data.projects.length > 0 && (
         <ul>
           {data.projects.map((project, index) => (
@@ -194,8 +225,9 @@ function Projects({
                 className="w-fit underline"
                 variant="primaryLink"
                 to={project.link}
+                textSize="body-bold"
               >
-                <Text type="body-bold">{project.title}</Text>
+                {project.title}
               </Link>
 
               <Text className="my-2" type="caption">
@@ -211,13 +243,19 @@ function Projects({
                   </div>
                 ))}
               </div>
-              <Button
-                onClick={() => handleRemoveProject(index)}
-                className="w-fit ml-auto"
-                variant="errorLink"
-              >
-                <Text type="body">Remove</Text>
-              </Button>
+              <span className="flex gap-x-4 justify-end w-full">
+                <Button onClick={() => handleEdit(index)} variant="primaryLink">
+                  <Pencil className="w-4 h-4" />
+                  <Text type="body">Edit</Text>
+                </Button>
+                <Button
+                  onClick={() => handleRemoveProject(index)}
+                  variant="errorLink"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <Text type="body">Remove</Text>
+                </Button>
+              </span>
             </li>
           ))}
         </ul>

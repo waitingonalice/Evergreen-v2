@@ -8,7 +8,7 @@ class FileRecordModel:
 
     def __init__(
         self,
-        id: str = "",
+        id: str | None = None,
         account_id: str | None = None,
         filename: str | None = None,
         filesize: int | None = None,
@@ -26,6 +26,7 @@ class FileRecordModel:
         (:filename IS NULL OR POSITION(:filename IN filename) > 0)
         AND (:status IS NULL OR :status = status)
         AND (:record_type IS NULL OR :record_type = type)
+        AND (:id IS NULL OR :id = id)
         AND (:account = account_id)
         """
 
@@ -69,6 +70,7 @@ class FileRecordModel:
         OFFSET :index
         """
         params = {
+            "id": self.id,
             "account": self.account_id,
             "record_type": self.type,
             "filename": self.filename,
@@ -86,6 +88,7 @@ class FileRecordModel:
         WHERE {self.list_filters}
         """
         params = {
+            "id": self.id,
             "account": self.account_id,
             "record_type": self.type,
             "filename": self.filename,
