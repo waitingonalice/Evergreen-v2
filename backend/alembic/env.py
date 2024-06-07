@@ -1,4 +1,5 @@
 from logging.config import fileConfig
+import os
 
 from sqlalchemy import engine_from_config, pool
 
@@ -25,6 +26,10 @@ target_metadata = schema.Base.metadata
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
+section = config.config_ini_section
+config.set_section_option(section, "POSTGRES_USER", os.getenv("POSTGRES_USER"))
+config.set_section_option(section, "POSTGRES_PASSWORD", os.getenv("POSTGRES_PASSWORD"))
+config.set_section_option(section, "POSTGRES_HOST", os.getenv("POSTGRES_HOST"))
 
 
 def run_migrations_offline() -> None:
@@ -40,6 +45,7 @@ def run_migrations_offline() -> None:
 
     """
     url = config.get_main_option("sqlalchemy.url")
+
     context.configure(
         url=url,
         target_metadata=target_metadata,

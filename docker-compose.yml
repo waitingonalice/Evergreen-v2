@@ -20,11 +20,11 @@ services:
     image: postgres:15
     restart: always
     env_file:
-      - ./data/.env.db
+      - ./backend/.env
     ports:
       - "6543:5432"
     volumes:
-      - ./data/dev:/var/lib/postgresql/data
+      - ./data:/var/lib/postgresql/data
 
   pgadmin:
     image: dpage/pgadmin4
