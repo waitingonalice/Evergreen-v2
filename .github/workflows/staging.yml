@@ -17,28 +17,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: frontend
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/yarn.lock') }}
-
       - name: Setup environment variables
         run: |
           chmod +x ./scripts/setup-env-frontend.sh
           ./scripts/setup-env-frontend.sh
         env:
           NEXT_PUBLIC_ENDPOINT_URL: ${{ secrets.NEXT_PUBLIC_ENDPOINT_URL }}
-
-  deploy-frontend:
-    runs-on: ubuntu-latest
-    needs: setup-frontend
-    steps:
-      - name: Checkout Cache
-        uses: actions/cache@v3
-        with:
-          path: frontend
-          key: ${{ runner.os }}-frontend-${{ hashFiles('frontend/yarn.lock') }}
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
@@ -66,12 +50,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: backend
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-
       - name: Setup environment variables
         run: |
           chmod +x ./scripts/setup-env-backend.sh
@@ -86,16 +64,6 @@ jobs:
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_URL: ${{ secrets.MINIO_URL }}
-
-  deploy-backend:
-    runs-on: ubuntu-22.04
-    needs: setup-backend
-    steps:
-      - name: Checkout Cache
-        uses: actions/cache@v3
-        with:
-          path: backend
-          key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
