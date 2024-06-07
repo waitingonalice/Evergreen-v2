@@ -1,0 +1,68 @@
+name: Deploy Prod
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Package version"
+        required: true
+
+jobs:
+  check-branch:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Check branch
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        run: |
+          echo "This workflow should not be triggered with workflow_dispatch on a branch other than main."
+          exit 1
+
+  deploy:
+    needs: check-branch
+    runs-on: ubuntu-22.04
+    environment:
+      name: main
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup environment variables
+        run: |
+          chmod +x ./scripts/setup-env-backend.sh
+          ./scripts/setup-env-backend.sh
+        env:
+          FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
+          SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
+          SECRET_ANSWER: ${{ secrets.SECRET_ANSWER }}
+          SUPPORT_EMAIL_ADDRESS: ${{ secrets.SUPPORT_EMAIL_ADDRESS }}
+          SUPPORT_EMAIL_PASSWORD: ${{ secrets.SUPPORT_EMAIL_PASSWORD }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+          MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+          MINIO_URL: ${{ secrets.MINIO_URL }}
+
+      - name: Login to GitHub Container Registry
+        run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: "Build, Tag, Push latest"
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ghcr.io/waitingonalice/evergreen-backend:latest
+
+      - name: Re-Tag and push version
+        run: |
+          docker tag ghcr.io/waitingonalice/evergreen-backend:latest ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
+
+      - name: Push version
+        run: docker push ghcr.io/evergreen/evergreen-backend:${{ inputs.version }}

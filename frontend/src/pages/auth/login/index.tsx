@@ -68,8 +68,8 @@ function Login() {
         title: "",
       };
       if (err instanceof AxiosError) {
+        const response = err.response?.data.detail;
         const message = () => {
-          const response = err.response?.data.detail;
           if (response === 400000) return "Invalid username or password.";
           if (response === 401006)
             return "Account is not verified, please check your email for the verification link.";

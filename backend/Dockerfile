@@ -1,8 +1,11 @@
-FROM python:3.11 as base
+FROM python:3.11-alpine as base
 WORKDIR /app
 
-RUN apt-get update \
-  && apt-get -y install build-essential libpq-dev gcc cargo
+RUN apk --update --upgrade add \
+  # Postgres dependencies
+  libpq-dev gcc cargo \
+  # Weasyprint dependencies
+  musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
 
 RUN pip install pipenv
 
@@ -10,7 +13,7 @@ ENV IN_DOCKER Yes
 
 FROM base as dev
 COPY ./Pipfile ./Pipfile.lock /app/
-RUN  pipenv install
+RUN pipenv install
 COPY . /app
 
 FROM base as prod

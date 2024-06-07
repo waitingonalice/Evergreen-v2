@@ -5,9 +5,7 @@ from .routes import v1
 
 app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-]
+origins = ["http://localhost:3000", "https://reallyboringsite.com"]
 
 app.add_middleware(
     CORSMiddleware,

@@ -1,18 +1,17 @@
 FROM node:20-alpine as base
 
-RUN apk add --no-cache libc6-compat
+RUN apk add --no-cache libc6-compat libc6-compat g++ make py3-pip
 WORKDIR /app
 
 FROM base as dev
 
 COPY ./package.json ./yarn.lock /app/
-RUN yarn install --pure-lockfile --non-interactive --cache-folder ./ycache; rm -rf ./ycache
-
-COPY . /app/
+RUN yarn install --frozen-lockfile
 
 FROM base as builder
 
-COPY --from=dev /app /app
+COPY --from=dev /app/node_modules /app/node_modules
+COPY . .
 RUN yarn run build
 
 # Production build strips out dev dependencies and only copies the necessary files
@@ -36,6 +35,8 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static /app/.next/static
 USER nextjs
 
 ENV HOSTNAME "0.0.0.0"
+ENV PORT 3000
+EXPOSE 3000
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 CMD ["node", "server.js"]
