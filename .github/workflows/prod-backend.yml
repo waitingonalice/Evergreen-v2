@@ -1,4 +1,4 @@
-name: Deploy Prod
+name: Deploy Prod Backend
 
 on:
   workflow_dispatch:
@@ -60,9 +60,9 @@ jobs:
           push: true
           tags: ghcr.io/waitingonalice/evergreen-backend:latest
 
-      - name: Re-Tag and push version
+      - name: Re-Tag
         run: |
           docker tag ghcr.io/waitingonalice/evergreen-backend:latest ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
 
       - name: Push version
-        run: docker push ghcr.io/evergreen/evergreen-backend:${{ inputs.version }}
+        run: docker push ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
