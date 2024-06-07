@@ -22,8 +22,8 @@ jobs:
         with:
           path: backend
           key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-backend-
+          # restore-keys: |
+          #   ${{ runner.os }}-backend-
 
       - name: Setup environment variables
         run: |
@@ -64,34 +64,16 @@ jobs:
 
   deploy:
     runs-on: ubuntu-22.04
-    # needs: migrate-db
-    # environment:
-    #   name: staging
-    steps:
-      # - name: Checkout code
-      #   uses: actions/checkout@v4
+    needs: setup
 
-      # - name: Setup environment variables
-      #   run: |
-      #     chmod +x ./.github/scripts/setup-env-backend.sh
-      #     ./.github/scripts/setup-env-backend.sh
-      #   env:
-      #     FRONTEND_URL: ${{ secrets.FRONTEND_URL }}
-      #     SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}
-      #     SECRET_ANSWER: ${{ secrets.SECRET_ANSWER }}
-      #     SUPPORT_EMAIL_ADDRESS: ${{ secrets.SUPPORT_EMAIL_ADDRESS }}
-      #     SUPPORT_EMAIL_PASSWORD: ${{ secrets.SUPPORT_EMAIL_PASSWORD }}
-      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
-      #     MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-      #     MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
-      #     MINIO_URL: ${{ secrets.MINIO_URL }}
+    steps:
       - name: Checkout Cache
         uses: actions/cache@v3
         with:
           path: backend
           key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-backend-
+          # restore-keys: |
+          #   ${{ runner.os }}-backend-
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
@@ -109,7 +91,7 @@ jobs:
           context: ./backend
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/waitingonalice/evergreen-backend:latest
+          tags: ghcr.io/waitingonalice/evergreen-backend-staging:latest
 
       # - name: Re-Tag and push version
       #   run: |
