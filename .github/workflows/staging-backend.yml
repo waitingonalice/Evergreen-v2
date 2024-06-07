@@ -85,6 +85,13 @@ jobs:
       #     MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
       #     MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
       #     MINIO_URL: ${{ secrets.MINIO_URL }}
+      - name: Checkout Cache
+        uses: actions/cache@v3
+        with:
+          path: backend
+          key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-backend-
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
