@@ -30,6 +30,7 @@ section = config.config_ini_section
 config.set_section_option(section, "POSTGRES_USER", os.getenv("POSTGRES_USER"))
 config.set_section_option(section, "POSTGRES_PASSWORD", os.getenv("POSTGRES_PASSWORD"))
 config.set_section_option(section, "POSTGRES_HOST", os.getenv("POSTGRES_HOST"))
+config.set_section_option(section, "POSTGRES_PORT", os.getenv("POSTGRES_PORT"))
 
 
 def run_migrations_offline() -> None:

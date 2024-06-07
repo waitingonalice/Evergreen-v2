@@ -12,7 +12,7 @@ def get_database_url():
 
 
 engine = create_engine(
-    # To handle the case where we are not accessing the database from a docker compose network within the same machine (production)
+    # To handle the case where the database is being excessed outside of docker compose network
     url=get_database_url() or Env.DATABASE_URL or "",
     pool_size=20,
     max_overflow=0,

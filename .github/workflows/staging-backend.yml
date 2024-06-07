@@ -22,8 +22,6 @@ jobs:
         with:
           path: backend
           key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-          # restore-keys: |
-          #   ${{ runner.os }}-backend-
 
       - name: Setup environment variables
         run: |
@@ -39,41 +37,16 @@ jobs:
           MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
           MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
           MINIO_URL: ${{ secrets.MINIO_URL }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-
-  # migrate-db:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Checkout cache
-  #       uses: actions/cache@v3
-  #       with:
-  #         path: backend
-  #         key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-  #         restore-keys: |
-  #           ${{ runner.os }}-backend-
-  #     - name:
-  #       run: |
-  #         cd backend
-  #         pipenv run migrate
 
   deploy:
     runs-on: ubuntu-22.04
     needs: setup
-
     steps:
       - name: Checkout Cache
         uses: actions/cache@v3
         with:
           path: backend
           key: ${{ runner.os }}-backend-${{ hashFiles('backend/Pipfile.lock') }}
-          # restore-keys: |
-          #   ${{ runner.os }}-backend-
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
@@ -92,10 +65,3 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: ghcr.io/waitingonalice/evergreen-backend-staging:latest
-
-      # - name: Re-Tag and push version
-      #   run: |
-      #     docker tag ghcr.io/waitingonalice/evergreen-backend:latest ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
-
-      # - name: Push version
-      #   run: docker push ghcr.io/evergreen/evergreen-backend:${{ inputs.version }}
