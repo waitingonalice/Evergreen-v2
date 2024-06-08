@@ -1,11 +1,12 @@
 name: Deploy Prod Backend
 
 on:
-  workflow_dispatch:
-    inputs:
-      version:
-        description: "Package version"
-        required: true
+  workflow_dispatch
+  # workflow_dispatch:
+  # inputs:
+  #   version:
+  #     description: "Package version"
+  #     required: true
 
 jobs:
   check-branch:
@@ -60,9 +61,9 @@ jobs:
           push: true
           tags: ghcr.io/waitingonalice/evergreen-backend:latest
 
-      - name: Re-Tag
-        run: |
-          docker tag ghcr.io/waitingonalice/evergreen-backend:latest ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
+      # - name: Re-Tag
+      #   run: |
+      #     docker tag ghcr.io/waitingonalice/evergreen-backend:latest ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
 
-      - name: Push version
-        run: docker push ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
+      # - name: Push version
+      #   run: docker push ghcr.io/waitingonalice/evergreen-backend:${{ inputs.version }}
