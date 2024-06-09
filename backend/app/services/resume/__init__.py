@@ -66,6 +66,7 @@ class ResumeService(AccountModel):
                 account_id=self.account["id"],
                 id=uuid,
                 type=enums.Bucket.RESUME,
+                filetype=enums.ContentTypeEnum.PDF,
             )
             resume = ResumeModel(file_record_id=uuid)
 
