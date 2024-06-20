@@ -1,11 +1,10 @@
 import json
 
 from ...models.system import SystemInfoModel
-from ...utils.formatting import convert_bytes
 
 
-class SystemInfoService:
-    def get_latest_info(self):
+class MonitoringService:
+    def get_latest_hardware_info(self):
         system_info = SystemInfoModel().list_latest_info()
 
         def format_info(info: dict):
@@ -18,11 +17,9 @@ class SystemInfoService:
 
             parse_memory.update(
                 {
-                    "available": convert_bytes(available_mem, "gb").__round__(
-                        1
-                    ),
-                    "total": convert_bytes(total_mem, "gb").__round__(1),
-                    "usage": convert_bytes(mem_usage, "gb").__round__(1),
+                    "available": available_mem,
+                    "total": total_mem,
+                    "usage": mem_usage,
                     "usage_percentage": mem_usage_percentage,
                 }
             )
@@ -35,3 +32,15 @@ class SystemInfoService:
 
         data = [format_info(info) for info in system_info]
         return {"result": data}
+
+    def save_hardware_info(self, data: dict):
+        pass
+
+    def save_selfhosted_app(self, data: dict):
+        pass
+
+    def list_self_hosted_apps(self):
+        pass
+
+    def get_self_hosted_app(self, id: str):
+        pass

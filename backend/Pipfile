@@ -16,7 +16,6 @@ bcrypt = "*"
 pytz = "*"
 weasyprint = "*"
 minio = "*"
-psutil = "*"
 
 [dev-packages]
 black = "*"
