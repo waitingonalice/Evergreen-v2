@@ -82,7 +82,7 @@ function CreateCV({ isEdit = false }: CVProps) {
         renderToast({
           ...toastProps,
           variant: "error",
-          title: err.response?.data.detail.msg,
+          title: "An error occurred while creating CV",
         });
       }
     }

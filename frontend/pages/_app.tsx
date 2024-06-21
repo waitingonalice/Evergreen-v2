@@ -3,8 +3,9 @@ import type { AppContext, AppProps } from "next/app";
 import Head from "next/head";
 import { ToastProvider, cn } from "@waitingonalice/design-system/";
 import { AppProvider, CustomProps } from "@/components/context";
+import { clientRoutes } from "@/constants";
 import "@/styles/globals.css";
-import { isBrowser, isServer } from "@/utils";
+import { isBrowser } from "@/utils";
 import { getUser } from "@/utils/auth";
 
 // Create a client
@@ -63,14 +64,19 @@ App.getInitialProps = async ({ Component, ctx, router }: AppContext) => {
     Component,
     router,
   };
+
+  const authRoutes = Object.values(clientRoutes.auth);
+  if (authRoutes.includes(ctx.pathname)) {
+    return props;
+  }
+
   const user = await getUser(ctx);
+
   if (!user?.data.result) {
     return props;
   }
 
   const { result } = user.data;
-  // eslint-disable-next-line no-console
-  if (isServer()) console.info(result);
   return {
     ...props,
     customProps: {

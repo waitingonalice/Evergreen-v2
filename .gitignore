@@ -37,10 +37,11 @@ next-env.d.ts
 .env
 
 *.db
-.mypy_cache
-data
 
+# python modules
+.mypy_cache
+__pycache__
+data
 .venv
-pyrightconfig.json
 
 reports

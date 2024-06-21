@@ -6,6 +6,7 @@ import {
   FormInput,
   FormNativeDatePicker,
   FormNativeSelect,
+  Switch,
   Text,
   useForm,
 } from "@waitingonalice/design-system";
@@ -25,14 +26,22 @@ interface ExperienceDialogProps {
   data?: Experience;
 }
 
-const init: Experience = {
+interface AdditionalFieldsProps {
+  currently_employed: boolean;
+}
+
+type AllFields = Experience & AdditionalFieldsProps;
+
+const init: AllFields = {
   company_name: "",
   role: "",
   employment: "" as EmploymentEnum,
   start: null,
   end: null,
   job_description: "",
+  currently_employed: false,
 };
+
 function ExperienceDialog({
   open,
   onClose,
@@ -40,7 +49,11 @@ function ExperienceDialog({
   onEdit,
   data,
 }: ExperienceDialogProps) {
-  const [field, setField] = useState(data ?? init);
+  const [field, setField] = useState<AllFields>({
+    ...init,
+    ...data,
+    currently_employed: Boolean(data && !data?.end),
+  });
 
   const form = useForm({
     zod: experienceSchema,
@@ -53,29 +66,28 @@ function ExperienceDialog({
     form.clearErrors();
   };
 
-  const handleAddExperience = () => {
+  const handleCommitExperience = () => {
     const success = form.onSubmit();
     if (!success) return;
-    onAdd(field);
+    if (data) {
+      onEdit(field);
+    } else {
+      onAdd(field);
+    }
     handleOnClose();
   };
 
-  const handleEditExperience = () => {
-    const success = form.onSubmit();
-    if (!success) return;
-    onEdit(field);
-    handleOnClose();
-  };
-
-  const handleOnChange = <T extends string | Date | null>(
-    key: keyof Experience,
+  const handleOnChange = <T extends string | Date | boolean | null>(
+    key: keyof AllFields,
     val: T,
   ) => {
     form.validate(key, val);
-    setField((prev) => ({ ...prev, [key]: val }));
+    if (key === "currently_employed" && val && typeof val === "boolean") {
+      setField((prev) => ({ ...prev, end: null, [key]: val }));
+    } else {
+      setField((prev) => ({ ...prev, [key]: val }));
+    }
   };
-
-  const handleAction = data ? handleEditExperience : handleAddExperience;
 
   return (
     <Dialog
@@ -88,7 +100,9 @@ function ExperienceDialog({
           <Button variant="secondary" onClick={handleOnClose}>
             Cancel
           </Button>
-          <Button onClick={handleAction}>{data ? "Edit" : "Add"}</Button>
+          <Button onClick={handleCommitExperience}>
+            {data ? "Edit" : "Add"}
+          </Button>
         </>
       }
     >
@@ -129,6 +143,7 @@ function ExperienceDialog({
           errorMessage={form.errors.start}
           calenderView="month"
         />
+
         <FormNativeDatePicker
           label="End"
           placeholder="Select end date"
@@ -137,6 +152,12 @@ function ExperienceDialog({
           showError={Boolean(form.errors.end)}
           errorMessage={form.errors.end}
           calenderView="month"
+          disabled={field.currently_employed}
+        />
+        <Switch
+          label="I am currently working here"
+          checked={field.currently_employed}
+          onCheckedChange={(val) => handleOnChange("currently_employed", val)}
         />
         <FormInput
           label="Description"
@@ -176,7 +197,6 @@ export function Experience({
   const handleRemoveExperience = (index: number) => {
     onChange("experiences", handleRemove(index));
   };
-
   return (
     <SectionWrapper buttonLabel="Add Experience" onClick={handleModal}>
       {showDialog && (
@@ -196,10 +216,10 @@ export function Experience({
         >
           <div className="flex gap-x-4 items-center justify-between">
             <Text type="subhead-2-bold">{exp.company_name}</Text>
-            {exp.start && exp.end && (
+            {exp.start && (
               <Text type="caption">
                 {toMMMMYYYY(exp.start)} -&nbsp;
-                {toMMMMYYYY(exp.end)}
+                {exp.end ? toMMMMYYYY(exp.end) : "Present"}
               </Text>
             )}
           </div>

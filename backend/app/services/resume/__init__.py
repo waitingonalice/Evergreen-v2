@@ -72,16 +72,17 @@ class ResumeService(AccountModel):
 
             body_dict = body.model_dump()
 
-            def format_date(model: dict[str, Any]):
+            def format_experience(model: dict[str, Any]):
                 update = model.copy()
                 start_date: datetime = update["start"]
                 end_date: datetime = update["end"]
                 update["start"] = start_date.strftime("%B %Y")
-                update["end"] = end_date.strftime("%B %Y")
+                if end_date is not None:
+                    update["end"] = end_date.strftime("%B %Y")
                 return update
 
             formatted_experience = [
-                format_date(exp) for exp in body_dict["experiences"]
+                format_experience(exp) for exp in body_dict["experiences"]
             ]
             formatted_projects = [
                 {**exp, "link": str(exp["link"])}
@@ -90,6 +91,7 @@ class ResumeService(AccountModel):
 
             body_dict["projects"] = formatted_projects
             body_dict["experiences"] = formatted_experience
+
             stringify_content = json.dumps(body_dict)
 
             def add_entries(conn: Connection):
@@ -116,6 +118,7 @@ class ResumeService(AccountModel):
         content = json.loads(data["content"])
         for exp in content["experiences"]:
             exp["start"] = datetime.strptime(exp["start"], "%B %Y")
-            exp["end"] = datetime.strptime(exp["end"], "%B %Y")
+            if exp["end"] is not None:
+                exp["end"] = datetime.strptime(exp["end"], "%B %Y")
 
         return {"result": content}
