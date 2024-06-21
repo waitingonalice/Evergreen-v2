@@ -30,3 +30,8 @@ def generate_dir(name: str):
 
 def get_timestamp_now(tz: str, format: str):
     return datetime.now(pytz.timezone(tz)).strftime(format)
+
+
+def convert_bytes(bytes: int, format: str = "mb"):
+    format_map = {"kb": 1e3, "mb": 1e6, "gb": 1e9, "tb": 1e12}
+    return bytes / format_map[format]

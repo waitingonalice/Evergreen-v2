@@ -1,6 +1,6 @@
 from sqlalchemy import Connection, text
 
-from ..constants.enums import Bucket, Status
+from ..constants.enums import Bucket, ContentTypeEnum, Status
 from ..db.utils import query
 
 
@@ -10,17 +10,21 @@ class FileRecordModel:
         self,
         id: str | None = None,
         account_id: str | None = None,
+        self_hosted_id: str | None = None,
         filename: str | None = None,
         filesize: int | None = None,
         type: Bucket | None = None,
         status: Status | None = None,
+        filetype: ContentTypeEnum = ContentTypeEnum.OCTET_STREAM,
     ):
         self.id = id
         self.filename = filename
         self.account_id = account_id
+        self.self_hosted_id = self_hosted_id
         self.filesize = filesize
         self.status = status.value if status else None
         self.type = type.value if type else None
+        self.filetype = filetype.value
 
         self.list_filters = """
         (:filename IS NULL OR POSITION(:filename IN filename) > 0)
@@ -33,8 +37,8 @@ class FileRecordModel:
     def create_file_record(self, conn: Connection):
         statement = """
           INSERT INTO "FileRecord"
-          (id, filename, status, filesize, account_id, type)
-          VALUES (:id, :filename, :status, :filesize, :account_id, :type)
+          (id, filename, status, filesize, account_id, type, filetype, self_hosted_id)
+          VALUES (:id, :filename, :status, :filesize, :account_id, :type, :filetype, :self_hosted_id)
         """
         params = {
             "id": self.id,
@@ -43,6 +47,8 @@ class FileRecordModel:
             "account_id": self.account_id,
             "filesize": self.filesize,
             "type": self.type,
+            "filetype": self.filetype,
+            "self_hosted_id": self.self_hosted_id,
         }
         conn.execute(text(statement), params)
 
