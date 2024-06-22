@@ -35,7 +35,7 @@
 
       h1 {
         margin: 0;
-        font-size: 2.5rem;
+        font-size: 2rem;
         line-height: 2rem;
         font-weight: normal;
         color: #000;
@@ -121,12 +121,8 @@
         padding: 0px 4px;
       }
 
-      .title-left {
-        display: inline;
-      }
-
       .title{
-        font-weight: 700;
+        margin-bottom: 0.3rem;
       }
 
       #location {
@@ -278,7 +274,7 @@
         </header>
 
         <section id="skills">
-          <h2 style="margin-bottom: 8px;">Skills</h2>
+          <h2 class="title">Skills</h2>
           <div>
             <div>
               <p class="title-left">Languages</p>
@@ -301,7 +297,7 @@
           id="experience"
           style="page-break-after: always;"
         >
-          <h2 style="margin-bottom: 8px;">Experience</h2>
+          <h2 class="title">Experience</h2>
           {% for experience in experiences %}
             <div style="margin-bottom: 16px;">
               <div style="display: flex; justify-content: space-between;">
@@ -309,7 +305,7 @@
                 <span>
                   <time>{{ experience["start"] }}</time>
                   -
-                  <time>{{ experience["end"] }}</time>
+                  <time>{{ experience["end"] or 'Present' }}</time>
                 </span>
               </div>
               <div>
@@ -326,7 +322,7 @@
         </section>
 
         <section id="educationAndCert">
-          <h2 style="margin-bottom: 8px;">Education and Certifications</h2>
+          <h2 class="title">Education and Certifications</h2>
           {% for cert in certifications %}
             <div style="margin-bottom: 16px;">
               <h3>{{ cert["title"] }}</h3>
@@ -340,7 +336,7 @@
         <section
           id="projects"
         >
-          <h2 style="margin-bottom: 8px;">Projects</h2>
+          <h2 class="title">Projects</h2>
           {% for project in projects %}
           <div style="margin-bottom: 16px;">
             <h3>

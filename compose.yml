@@ -19,8 +19,10 @@ services:
   database-dev:
     image: postgres:15
     restart: always
-    env_file:
-      - ./backend/.env
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: postgres
     ports:
       - "6543:5432"
     volumes:

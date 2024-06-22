@@ -1,4 +1,5 @@
 from datetime import date
+from typing import Optional
 
 from pydantic import BaseModel, HttpUrl
 
@@ -8,7 +9,7 @@ class ExperienceModel(BaseModel):
     role: str
     employment: str
     start: date
-    end: date
+    end: Optional[date] = None
     job_description: str
 
 
