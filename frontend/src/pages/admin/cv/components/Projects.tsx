@@ -230,7 +230,7 @@ function Projects({
                 {project.title}
               </Link>
 
-              <Text className="my-2" type="caption">
+              <Text className="my-2 whitespace-pre-line" type="caption">
                 {project.description}
               </Text>
               <div className="flex flex-wrap gap-x-2">
