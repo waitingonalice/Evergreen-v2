@@ -83,7 +83,6 @@ class AxiosFactory {
       return Promise.reject(error);
     }
     const axiosClient = axios.create({
-      withCredentials: true,
       headers: {
         "Content-Type": "application/json",
       },

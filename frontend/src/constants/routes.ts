@@ -1,5 +1,9 @@
 const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
+const notificationEndpoint = process.env.NEXT_PUBLIC_NOTIFICATION_ENDPOINT;
+
 const endpointV1 = `${endpoint}/api/v1`;
+const notificationEndpointV1 = `${notificationEndpoint}/api/v1`;
+
 export const clientRoutes = {
   root: "/",
   admin: {
@@ -44,5 +48,6 @@ export const apiRoutes = {
       download: (bucket: string, filename: string) =>
         `${endpointV1}/records/download/${bucket}/${filename}`,
     },
+    monitoring: `${notificationEndpointV1}/monitoring`,
   },
 };
