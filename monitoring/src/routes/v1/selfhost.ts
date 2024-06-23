@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { verifyUser } from "../../middleware";
 
-const ServicesRouter = Router();
+const SelfHostRouter = Router();
 
-ServicesRouter.use(verifyUser);
-ServicesRouter.get("/", (_, res) =>
+SelfHostRouter.use(verifyUser);
+SelfHostRouter.get("/", (_, res) =>
   res.status(200).json({ message: "Services is up!" }),
 );
 
-export default ServicesRouter;
+export default SelfHostRouter;
