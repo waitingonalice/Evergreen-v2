@@ -48,6 +48,9 @@ export const apiRoutes = {
       download: (bucket: string, filename: string) =>
         `${endpointV1}/records/download/${bucket}/${filename}`,
     },
-    monitoring: `${notificationEndpointV1}/monitoring`,
+    services: {
+      group: `${notificationEndpointV1}/services/group`,
+      index: `${notificationEndpointV1}/services`,
+    },
   },
 };

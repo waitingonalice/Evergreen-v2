@@ -1,0 +1,3 @@
+const DEFAULT_FILE_SIZE = 1024 * 1024; // 1 MB
+
+export { DEFAULT_FILE_SIZE };

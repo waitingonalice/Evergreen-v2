@@ -12,10 +12,10 @@ import { Link as LinkComponent } from "../../../link";
 
 export interface TopbarProps {
   onBackClick?: () => void;
-  ctxButtons?: Omit<ButtonProps, "size">[];
+  buttons?: Omit<ButtonProps, "size">[];
 }
 
-function Topbar({ onBackClick, ctxButtons }: TopbarProps) {
+function Topbar({ onBackClick, buttons }: TopbarProps) {
   const router = useRouter();
   const [openPanel, setOpenPanel] = useState(false);
 
@@ -64,7 +64,7 @@ function Topbar({ onBackClick, ctxButtons }: TopbarProps) {
         <Bars3CenterLeftIcon className="w-6 h-auto" />
       </button>
       <div className="flex gap-x-4 items-center">
-        {ctxButtons?.map((props, index) => (
+        {buttons?.map((props, index) => (
           <Button key={index} {...props} size="small" />
         ))}
         <LinkComponent

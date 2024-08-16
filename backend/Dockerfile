@@ -1,23 +1,27 @@
-FROM python:3.11-alpine as base
+FROM node:20-alpine as base
+
 WORKDIR /app
 
-RUN apk --update --upgrade add \
-  # Postgres dependencies
-  libpq-dev gcc cargo \
-  # Weasyprint dependencies
-  musl-dev jpeg-dev zlib-dev libffi-dev cairo-dev pango-dev gdk-pixbuf-dev
-
-RUN pip install pipenv
-
-ENV IN_DOCKER Yes
+# Install packages needed to build node modules
+RUN apk add --no-cache libc6-compat libc6-compat g++ make py3-pip
 
 FROM base as dev
-COPY ./Pipfile ./Pipfile.lock /app/
-RUN pipenv install
-COPY . /app
+ENV NODE_ENV="development"
+COPY ./package.json ./yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+FROM base as build
+COPY . .
+RUN yarn build
 
 FROM base as prod
-COPY --from=dev /app /app
-RUN  pipenv install --deploy --system
-EXPOSE 8000
-CMD ["pipenv", "run", "start"]
+ENV NODE_ENV="production"
+COPY --from=dev /app/package.json /app/yarn.lock /app/
+COPY --from=build /app/.env /app/.env
+COPY --from=build /app/src/static /app/static
+COPY --from=build /app/build /app
+
+RUN yarn install --frozen-lockfile --production
+
+EXPOSE 8001
+CMD ["node", "--env-file=./.env", "server.js"]

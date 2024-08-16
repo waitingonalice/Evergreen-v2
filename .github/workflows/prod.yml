@@ -91,10 +91,10 @@ jobs:
       - name: "Build, Tag, Push latest"
         uses: docker/build-push-action@v5
         with:
-          context: ./backend
+          context: ./auth
           platforms: linux/amd64,linux/arm64
           push: true
-          tags: ghcr.io/waitingonalice/evergreen-backend:latest
+          tags: ghcr.io/waitingonalice/evergreen-auth:latest
 
       # - name: Re-Tag
       #   run: |

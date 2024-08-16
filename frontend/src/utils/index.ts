@@ -6,3 +6,4 @@ export * from "./axios";
 export * from "./cookies";
 export * from "./auth";
 export * from "./options";
+export * from "./file";

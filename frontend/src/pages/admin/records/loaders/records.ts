@@ -1,7 +1,7 @@
 import { BucketEnum, StatusEnum, apiRoutes } from "@/constants";
 import { useLazyQuery } from "@/hooks/useLazyQuery";
 import { Maybe } from "@/types";
-import { RecordsType } from "@/types/records";
+import { RecordsType } from "@/types/fileRecords";
 import { AxiosFactory } from "@/utils";
 
 export interface ListRecordInput {
