@@ -1,7 +1,8 @@
 import React from "react";
 import { Plus } from "lucide-react";
 import { Button, cn } from "@waitingonalice/design-system";
-import { AdminLayout } from "@/components";
+import { AdminLayout, Link } from "@/components";
+import { clientRoutes } from "@/constants";
 import { GroupDialog } from "./components/Dialog";
 import { SelfHostForm } from "./components/SelfHostForm";
 import { useServices } from "./hooks/useServices";
@@ -12,7 +13,6 @@ function AdminDashboard() {
     openDialog,
     loadingGroup,
     handleDisplayGroupDialog,
-    handleServiceDialog,
     handleGroup,
     handleAddService,
     handleCloseServiceDialog,
@@ -40,13 +40,15 @@ function AdminDashboard() {
           >
             Add group
           </Button>
-          <Button
-            onClick={handleServiceDialog}
+
+          <Link
+            to={clientRoutes.admin.create}
+            variant="primary"
             size="small"
             prefixIcon={<Plus className="h-4 w-4" />}
           >
             Add service
-          </Button>
+          </Link>
 
           <SelfHostForm
             show={openDialog.service}

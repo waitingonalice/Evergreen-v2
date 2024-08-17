@@ -7,7 +7,8 @@ const backendEndpointV1 = `${notificationEndpoint}/api/v1`;
 export const clientRoutes = {
   root: "/",
   admin: {
-    dashboard: "/admin/dashboard",
+    index: "/admin",
+    create: "/admin/create",
     cv: {
       index: "/admin/cv",
       edit: (id: string) => `/admin/cv/${id}`,
@@ -22,7 +23,6 @@ export const clientRoutes = {
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
   },
-  dashboard: "/",
 };
 
 export const apiRoutes = {

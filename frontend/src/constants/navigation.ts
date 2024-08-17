@@ -5,7 +5,7 @@ import { clientRoutes } from "./routes";
 export const navigation = [
   {
     name: "Home",
-    href: clientRoutes.admin.dashboard,
+    href: clientRoutes.admin.index,
     Icon: HomeIcon,
   },
   {
