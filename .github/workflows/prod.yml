@@ -33,7 +33,8 @@ jobs:
           chmod +x ./scripts/setup-env-frontend.sh
           ./scripts/setup-env-frontend.sh
         env:
-          NEXT_PUBLIC_ENDPOINT_URL: ${{ secrets.NEXT_PUBLIC_ENDPOINT_URL }}
+          NEXT_PUBLIC_AUTH_ENDPOINT: ${{ secrets.NEXT_PUBLIC_AUTH_ENDPOINT }}
+          NEXT_PUBLIC_BACKEND_ENDPOINT: ${{ secrets.NEXT_PUBLIC_BACKEND_ENDPOINT }}
 
       - name: Login to GitHub Container Registry
         run: docker login ghcr.io -u ${{ secrets.DOCKER_GH_USER }} -p ${{ secrets.DOCKER_GH_TOKEN }}
