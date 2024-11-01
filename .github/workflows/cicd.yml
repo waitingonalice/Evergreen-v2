@@ -10,7 +10,7 @@ defaults:
     working-directory: ./
 
 jobs:
-  code-quality-backend:
+  lint_auth:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -23,16 +23,16 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
+          cd auth
           python3 -m pip install --upgrade pipenv
           pipenv install --dev
 
       - name: Run linters
         run: |
-          cd backend
+          cd auth
           pipenv run typecheck
 
-  code-quality-frontend:
+  lint_frontend:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

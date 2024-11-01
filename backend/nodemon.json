@@ -1,0 +1,6 @@
+{
+  "exec": "node -r ts-node/register --env-file=./.env ./src/server.ts",
+  "ext": ".ts,.js",
+  "ignore": [],
+  "watch": ["./src"]
+}

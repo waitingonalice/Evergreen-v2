@@ -2,15 +2,28 @@ version: "3.8"
 name: evergreen
 
 services:
+  auth:
+    build:
+      context: ./auth
+      target: dev
+    container_name: auth
+    command: pipenv run start
+    restart: always
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./auth:/app
+    depends_on:
+      - database-dev
+
   backend:
     build:
       context: ./backend
       target: dev
     container_name: backend
-    command: pipenv run start
-    restart: always
+    command: yarn dev
     ports:
-      - "8000:8000"
+      - "8001:8001"
     volumes:
       - ./backend:/app
     depends_on:

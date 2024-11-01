@@ -97,7 +97,7 @@ function CreateCV({ isEdit = false }: CVProps) {
     }
   }, [isEdit, router.query]);
 
-  const buttonProps: TopbarProps["ctxButtons"] = [
+  const buttonProps: TopbarProps["buttons"] = [
     {
       onClick: handleCreateCV,
       children: createCVOptions.isLoading ? <Spinner /> : "Create",
@@ -105,11 +105,13 @@ function CreateCV({ isEdit = false }: CVProps) {
     },
   ];
 
+  const title = isEdit ? "Edit CV" : "Add CV";
   return (
     <AdminLayout>
       <AdminLayout.Header
+        title={title}
         onBackClick={handleBackClick}
-        ctxButtons={buttonProps}
+        buttons={buttonProps}
       />
       <AdminLayout.Content className="gap-y-8">
         <Grid title="Skills">

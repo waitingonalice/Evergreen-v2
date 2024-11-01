@@ -56,8 +56,8 @@ function Login() {
       setCookie(REFRESH_KEY, data.result.refresh_token);
       const redirectRoute =
         data.result.role === RoleEnum.ADMIN
-          ? clientRoutes.admin.dashboard
-          : clientRoutes.dashboard;
+          ? clientRoutes.admin.index
+          : clientRoutes.root;
       router.replace(redirectRoute);
     } catch (err) {
       console.error(err);

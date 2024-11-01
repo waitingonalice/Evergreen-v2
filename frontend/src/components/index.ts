@@ -5,3 +5,5 @@ export * from "./link";
 export * from "./grid";
 export * from "./dnd";
 export * from "./tag";
+export * from "./mediaGrid";
+export * from "./img";

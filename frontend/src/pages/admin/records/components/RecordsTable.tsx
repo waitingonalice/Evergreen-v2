@@ -13,7 +13,7 @@ import {
 } from "@waitingonalice/design-system";
 import { Grid, Link } from "@/components";
 import { BucketEnum, StatusEnum, clientRoutes } from "@/constants";
-import { RecordsType } from "@/types/records";
+import { RecordsType } from "@/types/fileRecords";
 import { formatBytes, toDDMMMMYYYYHHMM } from "@/utils";
 import { FilterInput, useDownloadRecord } from "../loaders/records";
 import { FilterDrawer } from "./FilterDrawer";
@@ -146,11 +146,11 @@ function RecordsTable({
                       className="text-secondary-1 whitespace-nowrap"
                       type="caption"
                     >
-                      {data.filename || "N/A"}
+                      {data.file.name || "N/A"}
                     </Text>
-                    {data.filename && (
+                    {data.file.name && (
                       <Text className="text-secondary-4" type="caption">
-                        {formatBytes(data.filesize)}
+                        {formatBytes(data.file.size || 0)}
                       </Text>
                     )}
                   </Table.Cell>
@@ -171,9 +171,9 @@ function RecordsTable({
                   <Table.Cell className="flex gap-x-4">
                     <Button
                       onClick={() =>
-                        handleDownloadRecord(data.type, data.filename)
+                        handleDownloadRecord(data.type, data.file.name ?? "")
                       }
-                      disabled={!data.filename}
+                      disabled={!data.file.name}
                       size="small"
                     >
                       Download

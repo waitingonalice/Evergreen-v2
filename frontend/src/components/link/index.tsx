@@ -29,7 +29,7 @@ const LinkComponent = ({
     onClick?.();
   };
   const baseStyle =
-    "hover:cursor-pointer whitespace-nowrap transition-all duration-100 disabled:cursor-not-allowed disabled:opacity-30 text-[14px] font-medium tracking-[0.0125em] flex justify-center items-center gap-x-4";
+    "hover:cursor-pointer whitespace-nowrap transition-all duration-100 disabled:cursor-not-allowed disabled:opacity-30 text-[14px] font-medium tracking-[0.0125em] flex justify-center items-center gap-x-1";
 
   const baseStyleButton = cn(
     "first-letter:focus:outline-none shadow-sm rounded-md active:ring-2 active:ring-offset-1",
@@ -38,7 +38,7 @@ const LinkComponent = ({
 
   const variantMapper = {
     primary: cn(
-      "shadow-primary-light/40 bg-primary-main hover:bg-primary-dark text-secondary-1 active:bg-primary-light active:ring-primary-light",
+      "shadow-primary-light/40 bg-primary-main hover:bg-primary-light text-secondary-1 active:bg-primary-dark active:ring-primary-light",
       baseStyleButton,
     ),
     secondary: cn(

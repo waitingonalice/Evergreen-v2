@@ -1,9 +1,14 @@
-const endpoint = process.env.NEXT_PUBLIC_ENDPOINT_URL;
-const endpointV1 = `${endpoint}/api/v1`;
+const endpoint = process.env.NEXT_PUBLIC_AUTH_ENDPOINT;
+const notificationEndpoint = process.env.NEXT_PUBLIC_BACKEND_ENDPOINT;
+
+const authEndpointV1 = `${endpoint}/api/v1`;
+const backendEndpointV1 = `${notificationEndpoint}/api/v1`;
+
 export const clientRoutes = {
   root: "/",
   admin: {
-    dashboard: "/admin/dashboard",
+    index: "/admin",
+    create: "/admin/create",
     cv: {
       index: "/admin/cv",
       edit: (id: string) => `/admin/cv/${id}`,
@@ -18,31 +23,34 @@ export const clientRoutes = {
     forgotPassword: "/forgot-password",
     resetPassword: "/reset-password",
   },
-  dashboard: "/",
 };
 
 export const apiRoutes = {
   v1: {
     account: {
-      me: `${endpointV1}/account/me`,
+      me: `${authEndpointV1}/account/me`,
     },
     auth: {
-      login: `${endpointV1}/auth/login`,
-      register: `${endpointV1}/auth/register`,
-      verifyEmail: `${endpointV1}/auth/verify-email`,
-      forgotPassword: `${endpointV1}/auth/forgot-password`,
-      resetPassword: `${endpointV1}/auth/reset-password`,
-      resendEmail: `${endpointV1}/auth/confirmation-email`,
-      refreshToken: `${endpointV1}/auth/refresh-token`,
+      login: `${authEndpointV1}/auth/login`,
+      register: `${authEndpointV1}/auth/register`,
+      verifyEmail: `${authEndpointV1}/auth/verify-email`,
+      forgotPassword: `${authEndpointV1}/auth/forgot-password`,
+      resetPassword: `${authEndpointV1}/auth/reset-password`,
+      resendEmail: `${authEndpointV1}/auth/confirmation-email`,
+      refreshToken: `${authEndpointV1}/auth/refresh-token`,
     },
     cv: {
-      create: `${endpointV1}/cv/create`,
-      get: (id: string) => `${endpointV1}/cv/${id}`,
+      create: `${authEndpointV1}/cv/create`,
+      get: (id: string) => `${authEndpointV1}/cv/${id}`,
     },
     records: {
-      list: `${endpointV1}/records`,
+      list: `${authEndpointV1}/records`,
       download: (bucket: string, filename: string) =>
-        `${endpointV1}/records/download/${bucket}/${filename}`,
+        `${authEndpointV1}/records/download/${bucket}/${filename}`,
+    },
+    services: {
+      group: `${backendEndpointV1}/services/group`,
+      index: `${backendEndpointV1}/services`,
     },
   },
 };

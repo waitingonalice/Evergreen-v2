@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import isNil from "lodash/isNil";
+import { isFunction, isPrimitive } from "@waitingonalice/utilities";
 
 export const sizes = ["Bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 export const formatBytes = (bytes: number, decimals = 2) => {
@@ -14,43 +15,8 @@ export const formatBytes = (bytes: number, decimals = 2) => {
 
 export const removeNulls = <S>(value: S | null): value is S => value != null;
 
-/** Recursive function that finds a key and returns its respective value in a deeply nested object  */
-export const findKey = (
-  targetKey: string,
-  object: Record<string, any>,
-): unknown | unknown[] | undefined => {
-  if (!object) return undefined;
-  const keys = Object.keys(object);
-  for (let i = 0; i < keys.length; i += 1) {
-    const key = keys[i];
-    if (key === targetKey) {
-      return object[key];
-    }
-    if (typeof object[key] === "object") {
-      const result = findKey(targetKey, object[key]);
-      return result;
-    }
-  }
-  return undefined;
-};
-
 export const reverseObject = (obj: Record<string, any>) =>
   Object.fromEntries(Object.entries(obj).map(([k, v]) => [v, k]));
-
-export const isPrimitive = <T>(o: T) => {
-  switch (typeof o) {
-    case "object": {
-      return false;
-    }
-    case "function": {
-      return false;
-    }
-    default: {
-      return true;
-    }
-  }
-};
-export const isFunction = <T>(o: T) => typeof o === "function";
 
 /**
  * @returns This function will return a value that is of the same type as its arguments.

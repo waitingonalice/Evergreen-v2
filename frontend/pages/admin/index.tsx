@@ -1,13 +1,7 @@
-import { GetServerSideProps } from "next";
-import { clientRoutes } from "@/constants";
+import React from "react";
 
-export const getServerSideProps: GetServerSideProps = async () => ({
-  props: {},
-  redirect: {
-    destination: clientRoutes.admin.dashboard,
-  },
-});
-
-export default function AdminRoot() {
-  return <></>;
+function AdminRoot() {
+  return <>Index page</>;
 }
+
+export default AdminRoot;
