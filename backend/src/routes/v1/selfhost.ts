@@ -8,6 +8,7 @@ SelfHostRouter.use(verifyUser);
 SelfHostRouter.post("/group", SelfHostController.handleAddNewGroup);
 SelfHostRouter.delete("/group/:id", SelfHostController.handleDeleteGroup);
 SelfHostRouter.put("/group", SelfHostController.handleUpdateGroup);
+SelfHostRouter.get("/group", SelfHostController.handleListGroups);
 
 SelfHostRouter.get("/", SelfHostController.handleListSelfHost);
 SelfHostRouter.post("/", SelfHostController.handleAddNewSelfHost);

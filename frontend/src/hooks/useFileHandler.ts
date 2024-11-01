@@ -20,7 +20,7 @@ const useFileHandler = ({ rules, initFiles }: FileHandlerProps) => {
     try {
       if (rules.maxFileCount && fileCount > rules.maxFileCount) {
         throw new Error(
-          `You can only upload a maximum of ${rules.maxFileCount} files.`,
+          `You can only upload a maximum of ${rules.maxFileCount} file(s).`,
         );
       }
       const fileData = await validateFiles(incomingFiles, rules);

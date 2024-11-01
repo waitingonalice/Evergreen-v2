@@ -27,7 +27,12 @@ def decode_token(token: str) -> dict:
 
 
 def generate_auth_token(
-    id: str, email: str, active: bool, role: str, country: str
+    id: str,
+    email: str,
+    active: bool,
+    role: str,
+    country: str,
+    username: str,
 ):
     expiry = datetime.datetime.now(
         tz=datetime.timezone.utc
@@ -39,6 +44,7 @@ def generate_auth_token(
             "active": active,
             "country": country,
             "role": role,
+            "username": username,
             "exp": expiry,
         }
     )

@@ -71,4 +71,19 @@ export class SelfHostGroupModel {
     });
     return data?.rowCount;
   }
+
+  async listGroups() {
+    const statement = `
+      SELECT id, name FROM "SelfHostedGroup"
+      WHERE account_id = $1
+    `;
+
+    const params = [this.accountId];
+    const data = await pg.query({
+      text: statement,
+      values: params,
+    });
+
+    return data?.rows;
+  }
 }

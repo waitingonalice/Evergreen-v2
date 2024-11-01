@@ -1,8 +1,7 @@
 import React from "react";
-import { AdminDashboard } from "@/pages/admin/dashboard";
 
 function AdminRoot() {
-  return <AdminDashboard />;
+  return <>Index page</>;
 }
 
 export default AdminRoot;

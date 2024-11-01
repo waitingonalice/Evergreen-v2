@@ -15,6 +15,7 @@ export const verifyUser = async (
   try {
     const payload = jwtVerify<DecodedAuthToken>(token);
     res.locals.accountId = payload.id;
+    res.locals.username = payload.username;
     return next();
   } catch (err) {
     if (err instanceof TokenExpiredError) {

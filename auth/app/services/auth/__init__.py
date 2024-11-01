@@ -53,6 +53,7 @@ class AuthService:
             "active": account_details["is_active"],
             "country": account_details["country"],
             "role": account_details["role"],
+            "username": account_details["username"],
         }
 
         refresh_token = {
@@ -171,6 +172,7 @@ class AuthService:
             "active": account_details["is_active"],
             "country": account_details["country"],
             "role": account_details["role"],
+            "username": account_details["username"],
         }
 
         new_token = auth.generate_auth_token(**auth_token)

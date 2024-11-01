@@ -16,13 +16,7 @@ interface ContentProps {
 }
 function Content({ children, className }: ContentProps) {
   return (
-    <div
-      className={cn(
-        "p-4 flex justify-center flex-col items-center",
-        "md:p-8",
-        className,
-      )}
-    >
+    <div className={cn("p-4 flex flex-col", "md:p-8", className)}>
       {children}
     </div>
   );

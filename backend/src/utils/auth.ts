@@ -7,6 +7,7 @@ export interface DecodedAuthToken {
   active: boolean;
   country: string;
   role: string;
+  username: string;
   exp: number;
 }
 

@@ -208,6 +208,15 @@ const handleUpdateSelfHost = tryCatch(async (req: Request, res: Response) => {
   });
 });
 
+const handleListGroups = tryCatch(async (req: Request, res: Response) => {
+  const { accountId } = res.locals;
+  const groupModel = new SelfHostGroupModel({ accountId });
+  const data = await groupModel.listGroups();
+  return res.status(200).json({
+    result: data,
+  });
+});
+
 export {
   handleAddNewSelfHost,
   handleListSelfHost,
@@ -216,4 +225,5 @@ export {
   handleAddNewGroup,
   handleDeleteGroup,
   handleUpdateGroup,
+  handleListGroups,
 };

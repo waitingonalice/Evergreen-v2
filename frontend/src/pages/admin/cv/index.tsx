@@ -105,9 +105,14 @@ function CreateCV({ isEdit = false }: CVProps) {
     },
   ];
 
+  const title = isEdit ? "Edit CV" : "Add CV";
   return (
     <AdminLayout>
-      <AdminLayout.Header onBackClick={handleBackClick} buttons={buttonProps} />
+      <AdminLayout.Header
+        title={title}
+        onBackClick={handleBackClick}
+        buttons={buttonProps}
+      />
       <AdminLayout.Content className="gap-y-8">
         <Grid title="Skills">
           <Skills data={form} onChange={handleOnChange} />

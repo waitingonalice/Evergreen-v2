@@ -48,8 +48,4 @@ export class FilesModel {
 
     return data?.rowCount;
   }
-
-  deleteFile() {
-    // Delete file record from database
-  }
 }

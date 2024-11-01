@@ -38,7 +38,7 @@ const LinkComponent = ({
 
   const variantMapper = {
     primary: cn(
-      "shadow-primary-light/40 bg-primary-main hover:bg-primary-dark text-secondary-1 active:bg-primary-light active:ring-primary-light",
+      "shadow-primary-light/40 bg-primary-main hover:bg-primary-light text-secondary-1 active:bg-primary-dark active:ring-primary-light",
       baseStyleButton,
     ),
     secondary: cn(
